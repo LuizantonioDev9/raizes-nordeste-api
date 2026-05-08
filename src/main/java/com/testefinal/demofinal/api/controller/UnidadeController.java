@@ -1,0 +1,44 @@
+package com.testefinal.demofinal.api.controller;
+
+import com.testefinal.demofinal.api.DTO.CatalogoUnidadeResponseDTO;
+import com.testefinal.demofinal.api.DTO.UnidadeDTO;
+import com.testefinal.demofinal.application.service.EstoqueService;
+import com.testefinal.demofinal.application.service.UnidadeService;
+import com.testefinal.demofinal.domain.model.Unidade;
+import com.testefinal.demofinal.infrastructure.repository.UnidadeRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/unidades")
+public class UnidadeController {
+
+    private final UnidadeService unidadeService;
+    private final EstoqueService estoqueService;
+
+    public UnidadeController(UnidadeService unidadeService, EstoqueService estoqueService) {
+        this.unidadeService = unidadeService;
+        this.estoqueService = estoqueService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Unidade> criarUnidade(@RequestBody UnidadeDTO unidade) {
+        Unidade unidadeCriada = unidadeService.cadastrarUnidade(unidade);
+        return ResponseEntity.status(HttpStatus.CREATED).body(unidadeCriada);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Unidade>> listarUnidades() {
+        return ResponseEntity.ok(unidadeService.listarUnidades());
+    }
+
+    @GetMapping("/{id}/produtos")
+    public ResponseEntity<CatalogoUnidadeResponseDTO> listarProdutosDaUnidade(@PathVariable UUID id) {
+        return ResponseEntity.ok(estoqueService.listarProdutosPorUnidade(id));
+    }
+}
