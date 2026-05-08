@@ -9,10 +9,10 @@
 
 	</parent>
 	<groupId>com.testefinal</groupId>
-	<artifactId>demofinal</artifactId>
+	<artifactId>raizes-nordeste-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>raizes-nordeste-api</name>
+	<description>API REST Projeto Final</description>
 	<url/>
 	<licenses>
 		<license/>
