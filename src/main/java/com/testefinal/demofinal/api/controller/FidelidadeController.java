@@ -52,7 +52,6 @@ public class FidelidadeController {
 
     @GetMapping("/meus-pontos")
     public ResponseEntity<SaldoPontosDTO> consultarMeusPontos() {
-        //chamamos o serviço que já sabe quem é o utilizador logado pelo token
         SaldoPontosDTO saldo = fidelidadeService.consultarMeusPontos();
         return ResponseEntity.ok(saldo);
     }

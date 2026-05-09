@@ -1,11 +1,11 @@
 package com.testefinal.demofinal.application.service;
 
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
-import com.testefinal.demofinal.domain.exception.ProdutoNaoEncontradoException;
+import com.testefinal.demofinal.domain.exception.ValidaRegraException;
 import com.testefinal.demofinal.domain.model.Produto;
 import com.testefinal.demofinal.infrastructure.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +19,9 @@ public class ProdutoService {
     }
 
     public Produto criarProduto(Produto produto) {
+        if(produto.getPreco() == null || produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValidaRegraException("O preço do produto deve ser maior que zero");
+        }
         return produtoRepository.save(produto);
     }
 
@@ -36,10 +39,6 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
-    public void removerProduto(UUID id) {
-        Produto produto = buscarProdutoPorId(id);
-        produtoRepository.delete(produto);
-    }
 
     public Produto atualizarProduto(Produto produto) {
         return produtoRepository.save(produto);

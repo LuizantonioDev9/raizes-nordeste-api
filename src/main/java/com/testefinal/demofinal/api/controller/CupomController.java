@@ -32,13 +32,11 @@ public class CupomController {
 
     @GetMapping
     public ResponseEntity<List<CupomResponseDTO>> listarCupons() {
-        //pega só os cupons válidos do banco
         List<Cupom> cuponsNoBanco = cupomService.listarCuponsValidos();
 
-        //cria a lista vazia do DTO
+
         List<CupomResponseDTO> clienteLista = new ArrayList<>();
 
-        //loop classico para converter
         for (Cupom c : cuponsNoBanco) {
             CupomResponseDTO dto = new CupomResponseDTO(
                     c.getId(),

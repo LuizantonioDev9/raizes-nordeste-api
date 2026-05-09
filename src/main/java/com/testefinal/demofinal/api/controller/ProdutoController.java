@@ -1,8 +1,10 @@
 package com.testefinal.demofinal.api.controller;
 
+import com.testefinal.demofinal.api.DTO.ProdutoRequestDTO;
 import com.testefinal.demofinal.application.service.ProdutoService;
 import com.testefinal.demofinal.domain.model.Produto;
 import com.testefinal.demofinal.infrastructure.repository.ProdutoRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +24,12 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> criar(@RequestBody Produto produto) {
-        Produto produtoCriado = produtoService.criarProduto(produto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoCriado);
+    public ResponseEntity<Produto> criar(@RequestBody @Valid ProdutoRequestDTO produtoDTO) {
+        Produto produto = new Produto();
+        produto.setNome(produtoDTO.nome());
+        produto.setPreco(produtoDTO.preco());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.criarProduto(produto));
     }
 
     @GetMapping

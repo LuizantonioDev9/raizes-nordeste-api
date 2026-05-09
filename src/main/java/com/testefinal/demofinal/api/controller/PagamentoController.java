@@ -21,32 +21,6 @@ public class PagamentoController {
         this.pagamentoService = pagamentoService;
     }
 
-//    @PostMapping("/mock-confirmacao")
-//    public ResponseEntity<PedidoResponseDTO> confirmarPagamentoMock(@RequestBody PagamentoRequestDTO request) {
-//
-//        Pedido pedido = pagamentoService.confirmarPagamentoMock(request.pedidoId(), request.sucesso());
-//
-//
-//        List<ItemResponseDTO> itensDTO = pedido.getItens().stream()
-//                .map(item -> new ItemResponseDTO(
-//                        item.getProduto().getNome(),
-//                        item.getQuantidade(),
-//                        item.getValor()
-//                )).toList();
-//
-//        PedidoResponseDTO responseDTO = new PedidoResponseDTO(
-//                pedido.getId(),
-//                pedido.getCanalPedido(),
-//                pedido.getStatus().name(),
-//                pedido.getTotal(),
-//                pedido.getCupom() != null ? pedido.getCupom().getCodigo() : null,
-//                pedido.getDataCriacao(),
-//                pedido.getDataAtualizacao(),
-//                itensDTO
-//        );
-//
-//        return ResponseEntity.ok(responseDTO);
-//    }
 
     @PostMapping("/mock-confirmacao")
     public ResponseEntity<PagamentoResponseDTO> confirmarPagamentoMock(@RequestBody PagamentoRequestDTO request) {
