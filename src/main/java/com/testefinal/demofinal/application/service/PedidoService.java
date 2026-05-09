@@ -8,6 +8,7 @@ import com.testefinal.demofinal.domain.enums.StatusPedido;
 import com.testefinal.demofinal.domain.exception.*;
 import com.testefinal.demofinal.domain.model.*;
 import com.testefinal.demofinal.infrastructure.repository.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -56,60 +57,96 @@ public class PedidoService {
 
     @Transactional
     public Pedido criarPedido(Pedido pedido) {
-        String email = getUsuarioLogado();
-        Cliente cliente = clienteRepository.findByEmail(email)
-                .orElseThrow(() -> new NaoEncontradoException("Cliente não encontrado"));
+        validarCanalPedido(pedido);
+        validarCliente(pedido);
+        validarUnidade(pedido);
+        validarCupom(pedido);
+        validarItensPedido(pedido);
 
-        pedido.setCliente(cliente);
+        recalcular(pedido);
 
+        validarProgramaFidelidade(pedido);
+
+        pedido.setStatus(StatusPedido.CRIADO);
+        pedido.setDataCriacao(LocalDateTime.now());
+
+        return pedidoRepository.save(pedido);
+
+    }
+
+    private void validarCanalPedido(Pedido pedido) {
+        if (pedido.getCanalPedido() == null) {
+            throw new ValidaRegraException("Canal do pedido é obrigatório");
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String permissoes = auth.getAuthorities().toString();
+
+        if (permissoes.contains("ROLE_CLIENTE") && "BALCAO".equalsIgnoreCase(pedido.getCanalPedido())) {
+            throw new NegocioException("Clientes não podem realizar pedidos via canal BALCAO");
+        }
+    }
+
+    private void validarCliente(Pedido pedido) {
+        if(pedido.getCliente() != null && pedido.getCliente().getId() != null) {
+            Cliente cliente = clienteRepository.findById(pedido.getCliente().getId())
+                    .orElseThrow(() -> new NaoEncontradoException("Cliente informado não foi encontrado"));
+            pedido.setCliente(cliente);
+        }
+        else {
+            String email = getUsuarioLogado();
+            Optional<Cliente> clienteLogado = clienteRepository.findByEmail(email);
+
+            if (clienteLogado.isPresent()) {
+                pedido.setCliente(clienteLogado.get());
+            }
+            else {
+                pedido.setCliente(null);
+            }
+        }
+    }
+
+    private void validarUnidade(Pedido pedido) {
         if (pedido.getUnidade() != null && pedido.getUnidade().getId() != null) {
             Unidade unidade = unidadeRepository.findById(pedido.getUnidade().getId())
                     .orElseThrow(() -> new NaoEncontradoException("Unidade não encontrada"));
             pedido.setUnidade(unidade);
+        } else {
+            throw new ValidaRegraException("Unidade do pedido é obrigatoria");
         }
 
+
+    }
+
+    private void validarCupom(Pedido pedido) {
         if (pedido.getCupom() != null && pedido.getCupom().getCodigo() != null) {
             Cupom cupom = cupomService.buscarPorCodigo(pedido.getCupom().getCodigo());
             pedido.setCupom(cupom);
         }
+    }
 
-        if (pedido.getCanalPedido() == null) {
-            throw new NaoEncontradoException("Canal do pedido é obrigatório");
+    private void validarItensPedido(Pedido pedido) {
+        if (pedido.getItens() == null || pedido.getItens().isEmpty()) {
+            throw new NegocioException("O pedido deve possuir pelo menos um item.");
         }
-
-        pedido.setStatus(StatusPedido.CRIADO);
-        pedido.setDataCriacao(LocalDateTime.now());
 
         List<ItemPedido> itensDoRequest = new java.util.ArrayList<>(pedido.getItens());
         pedido.getItens().clear();
 
         for (ItemPedido item : itensDoRequest) {
-            if (item.getQuantidade() <= 0) {
-                throw new NegocioException("A quantidade do produto precisa ser maior que zero.");
+            processarNovoItem(pedido, item);
+        }
+    }
+
+    public void validarProgramaFidelidade(Pedido pedido) {
+        if (pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0) {
+
+            Cliente cliente = pedido.getCliente();
+
+            if (cliente == null) {
+                throw new NegocioException("É necessario identificar o cliente para os pontos de fidelidade");
             }
 
-            Produto produto = produtoRepository.findById(item.getProduto().getId())
-                    .orElseThrow(() -> new NaoEncontradoException("Produto não encontrado"));
-            estoqueService.validarEstoque(produto.getId(), pedido.getUnidade().getId(), item.getQuantidade());
-
-
-            item.setProduto(produto);
-            item.setValor(produto.getPreco());
-            item.setPedido(pedido);
-
-            pedido.getItens().add(item);
-        }
-
-        recalcular(pedido);
-
-        //Resgata os pontos de fidelidade
-//        if(pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0) {
-//            BigDecimal desconto = BigDecimal.valueOf(pedido.getPontosResgate() * 0.05);
-//            pedido.setTotal(pedido.getTotal().subtract(desconto));
-//            cliente.setSaldoPontos(cliente.getSaldoPontos() - pedido.getPontosResgate());
-//        }
-
-        if (pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0) {
             if (!Boolean.TRUE.equals(cliente.getParticiparFidelidade())) {
                 throw new NegocioException(("O cliente não participa do programa de fidelidade"));
             }
@@ -118,56 +155,58 @@ public class PedidoService {
                 throw new NegocioException("Saldo de pontos insuficiente para realizar este resgate.");
             }
 
-            //calcula o desconto primeiro
             BigDecimal desconto = BigDecimal.valueOf(pedido.getPontosResgate() * 0.05);
-            //o desconto não pode deixar o pedido negativo
+
             if (desconto.compareTo(pedido.getTotal()) > 0) {
                 throw new NegocioException("O valor do desconto (R$ " + desconto + ") é maior que o total do pedido (R$ " + pedido.getTotal() + "). Use menos pontos!");
             }
-            //se passou por tudo aplica o desconto e tira os pontos
+
             pedido.setTotal(pedido.getTotal().subtract(desconto));
             cliente.setSaldoPontos(cliente.getSaldoPontos() - pedido.getPontosResgate());
         }
-
-
-        return pedidoRepository.save(pedido);
     }
+
+
+
+    private void processarNovoItem(Pedido pedido, ItemPedido item) {
+        System.out.println("ENTROU EM PROCESSAR ITEM");
+        System.out.println("ITEM: " + item);
+        System.out.println("PRODUTO: " + item.getProduto());
+        System.out.println("PRODUTO ID: " + (item.getProduto() != null ? item.getProduto().getId() : null));
+
+
+        if (item.getQuantidade() <= 0) {
+            throw new NegocioException("A quantidade do produto precisa ser maior que zero.");
+        }
+
+        Produto produto = produtoRepository.findById(item.getProduto().getId())
+                .orElseThrow(() -> new NaoEncontradoException("Produto não encontrado"));
+
+        estoqueService.validarEstoque(produto.getId(), pedido.getUnidade().getId(), item.getQuantidade());
+
+
+        item.setProduto(produto);
+        item.setValor(produto.getPreco());
+        item.setPedido(pedido);
+
+        pedido.getItens().add(item);
+    }
+
 
     @Transactional
     public Pedido adicionarItem(UUID id, ItemPedido itemPedido) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado"));
 
-        //não pode adicionar item depois do pedido finalizado
         if (pedido.getStatus() != StatusPedido.CRIADO) {
             throw new NegocioException("Pedido precisa estar em aberto para adicionar itens");
         }
 
-        //validação de quantidade do produto
-        if (itemPedido.getQuantidade() <= 0) {
-            throw new NegocioException("Quantidade precisa ser maior que zero");
-        }
-
-        //tenta encontrar o produto, caso não encontro retorna uma msg de erro
-        Produto produto = produtoRepository.findById(itemPedido.getProduto().getId())
-                .orElseThrow(() -> new NaoEncontradoException("Produto não encontrado"));
-
-        //valida se tem o produto no estoque
-        estoqueService.validarEstoque(
-                produto.getId(),
-                pedido.getUnidade().getId(),
-                itemPedido.getQuantidade()
-        );
-
-
-        itemPedido.setProduto(produto);
-        itemPedido.setValor(produto.getPreco());
-        itemPedido.setPedido(pedido);
-        pedido.getItens().add(itemPedido);
+        processarNovoItem(pedido, itemPedido);
 
         recalcular(pedido);
 
-        estoqueService.validarEstoque(produto.getId(), pedido.getUnidade().getId(), itemPedido.getQuantidade());
+//        estoqueService.validarEstoque(produto.getId(), pedido.getUnidade().getId(), itemPedido.getQuantidade());
         return pedidoRepository.saveAndFlush(pedido);
     }
 
@@ -184,7 +223,6 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado"));
 
-        //não vai permitir remover o item ou itens do pedido que não estiverem com o status CRIADO
         if (pedido.getStatus() != StatusPedido.CRIADO) {
             throw new NegocioException("Pedido precisa estar em aberto para remover itens");
         }
@@ -196,18 +234,15 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    //NÃO USAR //O CERTO É MUDAR O STATUS
-//    public void cancelarPedido(UUID id) {pedidoRepository.deleteById(id);}
-
     public Pedido cancelarPedido(UUID id) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado"));
 
-        //Só pode cancelar se não estiver finalizado
+
         if (pedido.getStatus() == StatusPedido.ENTREGUE || pedido.getStatus() == StatusPedido.RETIRADO || pedido.getStatus() == StatusPedido.CANCELADO) {
             throw new NegocioException("Não é possivel cancelar um pedido que já foi finalizado ou cancelado");
         }
-        //DEVOLUÇÃO estornar os pontos de fidelidade
+
         if (pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0) {
             Cliente cliente = pedido.getCliente();
             //pega o saldo atual e soma os pontos que ele tinha gastado
@@ -218,7 +253,7 @@ public class PedidoService {
 
             clienteRepository.save(cliente);
         }
-        //Finalização: muda o status
+
         pedido.setStatus(StatusPedido.CANCELADO);
 
         return pedidoRepository.save(pedido);
@@ -260,42 +295,13 @@ public class PedidoService {
         return pedido;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<PedidoResponseDTO> buscarPorCanal(CanalPedido canal) {
-        //Pega os pedidos do canal
         List<Pedido> pedidosDoBanco = pedidoRepository.findByCanalPedido(canal.name());
-        List<PedidoResponseDTO> pedidosDTO = new ArrayList<>();
 
-        for (Pedido pedido : pedidosDoBanco) {
-            List<ItemResponseDTO> itensDTO = new ArrayList<>();
-            for (ItemPedido item : pedido.getItens()) {
-                String nome = item.getProduto().getNome();
-                Integer qtd = item.getQuantidade();
-                BigDecimal preco = item.getProduto().getPreco();
-
-                ItemResponseDTO itemDTO = new ItemResponseDTO(nome, qtd, preco);
-                itensDTO.add(itemDTO);
-            }
-
-            //Pega o codigo do cupom e verifica se ele existe
-            String codigoCupom = null;
-            if (pedido.getCupom() != null) {
-                codigoCupom = pedido.getCupom().getCodigo();
-            }
-
-            PedidoResponseDTO dto = new PedidoResponseDTO(
-                    pedido.getId(),
-                    pedido.getCanalPedido(),
-                    pedido.getStatus().name(),
-                    pedido.getTotal(),
-                    codigoCupom,
-                    pedido.getDataCriacao(),
-                    pedido.getDataAtualizacao(),
-                    itensDTO
-            );
-            pedidosDTO.add(dto);
-        }
-        return pedidosDTO;
+        return pedidosDoBanco.stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     @Transactional
@@ -362,7 +368,7 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado"));
 
-        //o pedido tem que estar PRONTO para ser para ser marcado com o status de ENTREGUE
+
         if (pedido.getStatus() != StatusPedido.PRONTO) {
             throw new NegocioException("Pedido precisa estar pronto");
         }
@@ -370,7 +376,7 @@ public class PedidoService {
         if (pedido.getCanalPedido().equals(CanalPedido.APP.name()) || pedido.getCanalPedido().equals(CanalPedido.WEB.name())) {
             pedido.setStatus(StatusPedido.ENTREGUE);
         } else {
-            //se for TOTEM ou BALCAO
+
             pedido.setStatus(StatusPedido.RETIRADO);
         }
 
@@ -378,7 +384,7 @@ public class PedidoService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Pedido buscarPorId(UUID pedidoId) {
         return pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado com o ID: " + pedidoId));
@@ -390,7 +396,6 @@ public class PedidoService {
 
         Cliente cliente = clienteRepository.findByEmail(email)
                 .orElseThrow(() -> new NaoEncontradoException("Cliente não encontrado"));
-        //O banco de dados faz o trabalho pesado e ja traz apenas o carrinho aberto
         Pedido carrinhoAberto = pedidoRepository.findByClienteIdAndStatus(cliente.getId(), StatusPedido.CRIADO)
                 .orElseThrow(() -> new NaoEncontradoException("Você não possui nenhum carrinho em aberto no momento"));
 

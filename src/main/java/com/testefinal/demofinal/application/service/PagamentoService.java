@@ -45,23 +45,19 @@ public class PagamentoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido nao encontrado"));
 
-        //o pagamento só pode ser efetuado caso ele tenha itens
         if (pedido.getItens().isEmpty()) {
             throw new NegocioException("Pedido vazio não pode ser pago");
         }
 
-        //se o pagamento for diferente de criado e aguardando_pagamento ele avisa que não ta disponivel
         if (pedido.getStatus() != StatusPedido.CRIADO &&
                 pedido.getStatus() != StatusPedido.AGUARDANDO_PAGAMENTO) {
             throw new NegocioException("Pedido não disponivel para pagamento");
         }
 
-        //verifica se o pagamento ja foi registrado
         if (pagamentoRepository.findByPedidoId(pedidoId).isPresent()) {
             throw new NegocioException("Pagamento já registrado para este pedido");
         }
 
-        //validar o estoque antes de processar o pagamento
         for (ItemPedido item : pedido.getItens()) {
             estoqueService.validarEstoque(
                     item.getProduto().getId(),
@@ -70,18 +66,15 @@ public class PagamentoService {
             );
         }
 
-        //chamada simula o serviço externo mock
         boolean aprovado = processarPagamento(pedido, simularSucesso);
 
-        //cria o registro de pagamento no banco
-        //posso criar um metodo separado para ficar mais limpo?
+
         Pagamento pagamento = new Pagamento();
         pagamento.setPedido(pedido);
         pagamento.setMetodo("GATEWAY_MOCK");
         pagamento.setValor(pedido.getTotal());
         pagamento.setDataDoPagamento(LocalDateTime.now());
 
-        // se aprovado, vai dar baixa no estoque
         if (aprovado) {
             for (ItemPedido item : pedido.getItens()) {
                 estoqueService.saidaEstoque(
@@ -92,13 +85,8 @@ public class PagamentoService {
             }
 
 
-            //Calcula pontos (1 ponto por cada real gasto)
-            if (Boolean.TRUE.equals(pedido.getCliente().getParticiparFidelidade())) {
-                Cliente cliente = pedido.getCliente();
-                int pontosGanhos = pedido.getTotal().intValue();
-                int novoSaldo = (cliente.getSaldoPontos() != null ? cliente.getSaldoPontos() : 0) + pontosGanhos;
-                cliente.setSaldoPontos(novoSaldo);
-                clienteRepository.save(cliente);
+            if (pedido.getCliente() != null) {
+                aplicarPontosFidelidade(pedido);
             }
 
             pagamento.setStatus(StatusPagamento.APROVADO);
@@ -122,5 +110,17 @@ public class PagamentoService {
                 pagamento.getPayloadRetorno(),
                 pagamento.getDataDoPagamento()
         );
+    }
+
+    private void aplicarPontosFidelidade(Pedido pedido) {
+        Cliente cliente = pedido.getCliente();
+
+        if (Boolean.TRUE.equals(cliente.getParticiparFidelidade())) {
+            int pontosGanhos = pedido.getTotal().intValue();
+            int saldoAtual = (cliente.getSaldoPontos() != null) ? cliente.getSaldoPontos() : 0;
+
+            cliente.setSaldoPontos(saldoAtual + pontosGanhos);
+            clienteRepository.save(cliente);
+        }
     }
 }

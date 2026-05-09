@@ -64,13 +64,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/unidades/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/unidades/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/unidades/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.GET, "/unidades/*/produtos").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/unidades/*/produtos").permitAll()
 
                                 // CLIENTE
-                                .requestMatchers(HttpMethod.POST, "/pedidos/**").hasAnyRole("CLIENTE", "ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/pedidos/**").hasAnyRole("CLIENTE", "ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/pedidos/**").hasAnyRole("CLIENTE", "ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/pedidos/**").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO")
                                 .requestMatchers(HttpMethod.GET, "/pedidos/meu-carrinho").hasAnyRole("CLIENTE", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/cupons").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO")
                                 .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO")
@@ -78,10 +75,11 @@ public class SecurityConfig {
 
 
                                 // FUNCIONÁRIO / ADMIN
-                                .requestMatchers(HttpMethod.PUT, "/pedidos/*/preparar").hasAnyRole("FUNCIONARIO", "ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/pedidos/*/pronto").hasAnyRole("FUNCIONARIO", "ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/pedidos/*/entregar").hasAnyRole("FUNCIONARIO", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/estoques/**").hasAnyRole("ADMIN", "FUNCIONARIO")
+                                .requestMatchers(HttpMethod.PUT, "/pedidos/{id}/preparar").hasAnyRole("FUNCIONARIO", "ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/pedidos/{id}/pronto").hasAnyRole("FUNCIONARIO", "ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/pedidos/{id}/entregar").hasAnyRole("FUNCIONARIO", "ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/pedidos/**").hasAnyRole("FUNCIONARIO", "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/estoques/**").hasAnyRole("FUNCIONARIO", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/pedidos/**").hasAnyRole("FUNCIONARIO", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/produtos/**").hasAnyRole("FUNCIONARIO", "ADMIN")
 

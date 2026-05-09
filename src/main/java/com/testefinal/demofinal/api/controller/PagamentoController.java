@@ -24,7 +24,6 @@ public class PagamentoController {
 
     @PostMapping("/mock-confirmacao")
     public ResponseEntity<PagamentoResponseDTO> confirmarPagamentoMock(@RequestBody PagamentoRequestDTO request) {
-
         PagamentoResponseDTO resposta = pagamentoService.confirmarPagamentoMock(
                 request.pedidoId(),
                 request.sucesso()
