@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface CupomRepository extends JpaRepository<Cupom, UUID> {
     Optional<Cupom> findByCodigo(String codigo);
     List<Cupom> findByValidadeAfter(LocalDateTime dataAtual);
+    boolean existsByCodigo(String codigo);
 }

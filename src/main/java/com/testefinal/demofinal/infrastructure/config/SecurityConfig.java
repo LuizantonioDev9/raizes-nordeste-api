@@ -72,8 +72,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/pedidos/**").hasAnyRole("CLIENTE", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/pedidos/**").hasAnyRole("CLIENTE", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/pedidos/meu-carrinho").hasAnyRole("CLIENTE", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/cupons").hasAnyRole("CLIENTE", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyRole("CLIENTE", "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/cupons").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO")
+                                .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO")
                                 .requestMatchers("/pagamentos/**").hasAnyRole("CLIENTE", "ADMIN")
 
 

@@ -1,8 +1,10 @@
 package com.testefinal.demofinal.application.service;
 
+import com.testefinal.demofinal.domain.enums.TipoDesconto;
 import com.testefinal.demofinal.domain.exception.CupomNaoEncontradoException;
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
 import com.testefinal.demofinal.domain.exception.NegocioException;
+import com.testefinal.demofinal.domain.exception.ValidaRegraException;
 import com.testefinal.demofinal.domain.model.Cupom;
 import com.testefinal.demofinal.infrastructure.repository.CupomRepository;
 import jakarta.transaction.Transactional;
@@ -24,12 +26,23 @@ public class CupomService {
 
     @Transactional
     public Cupom salvar(Cupom cupom) {
+        if(cupomRepository.existsByCodigo(cupom.getCodigo())) {
+            throw new NegocioException("O cupom " + cupom.getCodigo() + " já está cadastrado.");
+        }
+
+        if(cupom.getValor() == null || cupom.getValor().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValidaRegraException("O valor do cupom deve ser maior que zero");
+        }
+
+        if(TipoDesconto.PERCENTUAL.equals(cupom.getTipoDesconto()) &&
+            cupom.getValor().compareTo(new BigDecimal("100")) > 0
+        ) {
+            throw new ValidaRegraException("Desconto percentual não pode ser maior que 100%");
+        }
+
         return cupomRepository.save(cupom);
     }
 
-//    public List<Cupom> listarTodos() {
-//        return cupomRepository.findAll();
-//    }
 
     public List<Cupom> listarCuponsValidos() {
         LocalDateTime agora = LocalDateTime.now();

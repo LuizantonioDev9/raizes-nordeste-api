@@ -1,5 +1,6 @@
 package com.testefinal.demofinal.domain.model;
 
+import com.testefinal.demofinal.domain.enums.TipoDesconto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +22,11 @@ public class Cupom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(nullable = false)
+    @Column(unique = true,nullable = false)
     private String codigo;
     @Column(nullable = false)
-    private String tipoDesconto;
+    @Enumerated(EnumType.STRING)
+    private TipoDesconto tipoDesconto;
     @Column(nullable = false)
     private BigDecimal valor;
     @Column(nullable = false)
