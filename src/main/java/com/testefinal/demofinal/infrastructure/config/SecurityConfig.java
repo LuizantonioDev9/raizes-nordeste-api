@@ -75,7 +75,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/cupons").hasAnyRole("CLIENTE", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyRole("CLIENTE", "ADMIN")
                                 .requestMatchers("/pagamentos/**").hasAnyRole("CLIENTE", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/produtos/**").authenticated()
+
 
                                 // FUNCIONÁRIO / ADMIN
                                 .requestMatchers(HttpMethod.PUT, "/pedidos/*/preparar").hasAnyRole("FUNCIONARIO", "ADMIN")
@@ -83,6 +83,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, "/pedidos/*/entregar").hasAnyRole("FUNCIONARIO", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/estoques/**").hasAnyRole("ADMIN", "FUNCIONARIO")
                                 .requestMatchers(HttpMethod.GET, "/pedidos/**").hasAnyRole("FUNCIONARIO", "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/produtos/**").hasAnyRole("FUNCIONARIO", "ADMIN")
 
                                 // ADMIN
                                 .requestMatchers(HttpMethod.POST, "/produtos/**").hasRole("ADMIN")

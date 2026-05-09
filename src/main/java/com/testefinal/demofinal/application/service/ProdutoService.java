@@ -24,7 +24,6 @@ public class ProdutoService {
         }
         return produtoRepository.save(produto);
     }
-
     public Produto buscarProduto(Produto produto) {
         return produtoRepository.findById(produto.getId())
                 .orElseThrow(() -> new NaoEncontradoException("Produto não encontrado"));

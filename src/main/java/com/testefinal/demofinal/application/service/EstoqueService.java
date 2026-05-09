@@ -3,13 +3,10 @@ package com.testefinal.demofinal.application.service;
 import com.testefinal.demofinal.api.DTO.CatalogoUnidadeResponseDTO;
 import com.testefinal.demofinal.api.DTO.ProdutoEstoqueDTO;
 import com.testefinal.demofinal.api.DTO.ResumoUnidadeDTO;
-import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
+import com.testefinal.demofinal.domain.exception.*;
 import com.testefinal.demofinal.domain.model.Estoque;
 import com.testefinal.demofinal.domain.model.Produto;
 import com.testefinal.demofinal.domain.model.Unidade;
-import com.testefinal.demofinal.domain.exception.NegocioException;
-import com.testefinal.demofinal.domain.exception.ProdutoNaoEncontradoException;
-import com.testefinal.demofinal.domain.exception.UnidadeNaoEncontradaException;
 import com.testefinal.demofinal.infrastructure.repository.EstoqueRepository;
 import com.testefinal.demofinal.infrastructure.repository.ProdutoRepository;
 import com.testefinal.demofinal.infrastructure.repository.UnidadeRepository;
@@ -43,6 +40,10 @@ public class EstoqueService {
 
         if(estoqueRepository.existsByProdutoIdAndUnidadeId(produtoId,unidadeId)) {
             throw new NegocioException("Produto já está associado a esta unidade");
+        }
+
+        if (quantidade < 0) {
+            throw new ValidaRegraException("A quantidade de estoque não pode ser negativa");
         }
 
         Estoque estoque = new Estoque();

@@ -18,6 +18,17 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    //500
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> tratarErroGenerico(Exception ex, HttpServletRequest request) {
+        return montarErro(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "ERRO_INTERNO",
+                "Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.",
+                request
+        );
+    }
+
     //422
     @ExceptionHandler(ValidaRegraException.class)
     public ResponseEntity<Map<String, Object>> tratarRegraNegocio(ValidaRegraException ex, HttpServletRequest request) {
