@@ -60,7 +60,7 @@ public class EstoqueService {
     }
 
     @Transactional
-    public void diminuirEstoque(UUID produtoId, UUID unidadeId, int quantidade){
+    public void saidaEstoque(UUID produtoId, UUID unidadeId, int quantidade){
         Estoque estoque = buscarEstoque(produtoId, unidadeId);
 
         //verifica se tem o produto suficiente antes de diminuir o estoque
@@ -75,7 +75,7 @@ public class EstoqueService {
     }
 
     @Transactional
-    public void adicionarAoEstoque(UUID produtoId, UUID unidadeId, int quantidade){
+    public void entradaEstoque(UUID produtoId, UUID unidadeId, int quantidade){
         Estoque estoque = estoqueRepository.findByProdutoIdAndUnidadeId(produtoId, unidadeId)
                 .orElseGet(() -> {
                     Estoque novo = new Estoque();

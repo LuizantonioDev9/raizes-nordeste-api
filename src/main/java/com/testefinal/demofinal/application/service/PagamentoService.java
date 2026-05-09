@@ -5,7 +5,6 @@ import com.testefinal.demofinal.domain.enums.StatusPagamento;
 import com.testefinal.demofinal.domain.enums.StatusPedido;
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
 import com.testefinal.demofinal.domain.exception.NegocioException;
-import com.testefinal.demofinal.domain.exception.PedidoNaoEncontradoException;
 import com.testefinal.demofinal.domain.model.Cliente;
 import com.testefinal.demofinal.domain.model.ItemPedido;
 import com.testefinal.demofinal.domain.model.Pagamento;
@@ -85,7 +84,7 @@ public class PagamentoService {
         // se aprovado, vai dar baixa no estoque
         if (aprovado) {
             for (ItemPedido item : pedido.getItens()) {
-                estoqueService.diminuirEstoque(
+                estoqueService.saidaEstoque(
                         item.getProduto().getId(),
                         pedido.getUnidade().getId(),
                         item.getQuantidade()

@@ -96,7 +96,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/cupons/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/cupons/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/cupons/**").hasRole("ADMIN")
-                                .requestMatchers("/estoques/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/estoques/**").hasRole("ADMIN")
 
                                 // CONSULTAS
                                 .requestMatchers(HttpMethod.GET, "/produtos/**").authenticated()

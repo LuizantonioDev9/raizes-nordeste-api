@@ -3,8 +3,8 @@ package com.testefinal.demofinal.api.controller;
 import com.testefinal.demofinal.api.DTO.EstoqueRequestDTO;
 import com.testefinal.demofinal.application.service.EstoqueService;
 import com.testefinal.demofinal.domain.model.Estoque;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,23 +36,24 @@ public class EstoqueController {
         return ResponseEntity.ok(estoqueService.buscarEstoque(produtoId, unidadeId));
     }
 
-    @PutMapping("/saida")
-    public ResponseEntity<String> diminuirEstoque(@RequestBody EstoqueRequestDTO estoqueRequest) {
-        estoqueService.diminuirEstoque(
+    @PostMapping("/saidas")
+    public ResponseEntity<Void> saidaEstoque(@RequestBody @Valid EstoqueRequestDTO estoqueRequest) {
+        estoqueService.saidaEstoque(
                 estoqueRequest.produtoId(),
                 estoqueRequest.unidadeId(),
                 estoqueRequest.quantidade()
         );
-        return ResponseEntity.ok("Produto retirado do Estoque");
+        return ResponseEntity.noContent().build();
     }
 
 
-    @PutMapping("/entrada")
-    public ResponseEntity<String> adicionarAoEstoque(@RequestBody EstoqueRequestDTO estoqueRequest) {
-        estoqueService.adicionarAoEstoque(
+    @PostMapping("/entradas")
+    public ResponseEntity<Void> entradaEstoque(@RequestBody @Valid EstoqueRequestDTO estoqueRequest) {
+        estoqueService.entradaEstoque(
                 estoqueRequest.produtoId(),
                 estoqueRequest.unidadeId(),
-                estoqueRequest.quantidade());
-        return ResponseEntity.ok("Produto adicionado ao Estoque");
+                estoqueRequest.quantidade()
+        );
+        return ResponseEntity.noContent().build();
     }
 }
