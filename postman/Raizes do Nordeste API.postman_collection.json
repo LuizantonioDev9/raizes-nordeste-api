@@ -305,7 +305,7 @@
           "response": []
         },
         {
-          "name": "Clientes/Consultar cliente por e-mail Copy",
+          "name": "Clientes/Consultar cliente por e-mail",
           "request": {
             "auth": {
               "type": "bearer",
@@ -650,7 +650,7 @@
           "response": []
         },
         {
-          "name": "visualizarMeusPontos Copy",
+          "name": "visualizarMeusPontos",
           "request": {
             "auth": {
               "type": "bearer",
@@ -950,7 +950,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Criação/Criar pedido com estoque insuficiente Copy",
+              "name": "Pedidos/Criação/Criar pedido com estoque insuficiente",
               "request": {
                 "auth": {
                   "type": "bearer",
