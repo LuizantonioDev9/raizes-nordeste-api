@@ -12,9 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PedidoRepository extends JpaRepository<Pedido, UUID> {
-
-    Optional<Pedido> findByClienteIdAndStatus(Cliente cliente, StatusPedido status);
-
     @EntityGraph(attributePaths = {"itens","itens.produto","cupom", "cliente", "unidade"})
     List<Pedido> findByCliente (Cliente cliente);
     List<Pedido> findByCanalPedido(String canalPedido);

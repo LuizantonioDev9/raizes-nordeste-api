@@ -1,5 +1,6 @@
 package com.testefinal.demofinal.infrastructure.security;
 
+import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
 import com.testefinal.demofinal.domain.model.Cliente;
 import com.testefinal.demofinal.infrastructure.repository.ClienteRepository;
 import com.testefinal.demofinal.infrastructure.repository.FuncionarioRepository;
@@ -47,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
-        throw new UsernameNotFoundException("Usuário não encontrado");
+        throw new NaoEncontradoException("Usuário não encontrado");
     }
 
 }

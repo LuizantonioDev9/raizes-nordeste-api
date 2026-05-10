@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Produto> criar(@RequestBody @Valid ProdutoRequestDTO produtoDTO) {
         Produto produto = new Produto();
         produto.setNome(produtoDTO.nome());
@@ -33,18 +35,9 @@ public class ProdutoController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'FUNCIONARIO')")
     public ResponseEntity<List<Produto>> listarProdutos() {
         return ResponseEntity.ok(produtoService.listarProdutos());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable UUID id, @RequestBody Produto produto) {
-        Produto produtoExistente = produtoService.buscarProdutoPorId(id);
-        produtoExistente.setNome(produto.getNome());
-        produtoExistente.setDescricao(produto.getDescricao());
-        produtoExistente.setPreco(produto.getPreco());
-
-        Produto produtoSalvo = produtoService.atualizarProduto(produtoExistente);
-        return ResponseEntity.ok(produtoSalvo);
-    }
 }

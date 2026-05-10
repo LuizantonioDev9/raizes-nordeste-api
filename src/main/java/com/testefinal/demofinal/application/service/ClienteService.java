@@ -1,17 +1,18 @@
 package com.testefinal.demofinal.application.service;
 
-import com.testefinal.demofinal.api.DTO.SaldoPontosDTO;
+import com.testefinal.demofinal.api.DTO.ClienteResponseDTO;
 import com.testefinal.demofinal.domain.enums.Perfil;
-import com.testefinal.demofinal.domain.exception.ClienteNaoEncontrado;
 import com.testefinal.demofinal.domain.exception.ConflitoException;
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
 import com.testefinal.demofinal.domain.exception.NegocioException;
 import com.testefinal.demofinal.domain.model.Cliente;
+import com.testefinal.demofinal.infrastructure.integration.log.LogService;
 import com.testefinal.demofinal.infrastructure.repository.ClienteRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,10 +23,12 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LogService logService;
 
-    public ClienteService(ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
+    public ClienteService(ClienteRepository clienteRepository, PasswordEncoder passwordEncoder,LogService logService) {
         this.clienteRepository = clienteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
     }
 
     @Transactional
@@ -35,8 +38,16 @@ public class ClienteService {
         if (clienteExistente.isPresent()) {
             throw new ConflitoException("Já existe um cliente cadastrado com esse e-mail");
         }
+
+        if(!Boolean.TRUE.equals(cliente.getAceitaPoliticaPrivacidade())) {
+            throw new NegocioException("É necessário aceitar a política de privacidade para realizar o cadastro de cliente");
+        }
+
         cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
         cliente.setPerfil(Perfil.CLIENTE);
+        cliente.setDataConsentimentoPrivacidade(LocalDateTime.now());
+
+        logService.auditoria("Cliente realizou o aceite da politica de privacidade. clienteId = " + cliente.getId());
 
         return clienteRepository.save(cliente);
     }
@@ -65,6 +76,19 @@ public class ClienteService {
             clienteAtual.setEmail(dadosAtualizados.getEmail());
         }
         return clienteRepository.save(clienteAtual);
+    }
+
+    @Transactional
+    public ClienteResponseDTO buscarPorEmail(String email) {
+        Cliente cliente = clienteRepository.findByEmail(email)
+                .orElseThrow(() -> new NaoEncontradoException("Cliente não encontrado"));
+
+        return new ClienteResponseDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getTelefone()
+        );
     }
 
     @Transactional

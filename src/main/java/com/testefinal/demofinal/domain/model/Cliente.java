@@ -35,6 +35,10 @@ public class Cliente {
     @Column(name = "participar_fidelidade")
     private Boolean participarFidelidade = false;
     private LocalDateTime dataConsentimentoFidelidade;
+    @Column(name = "aceite_politica_privac", nullable = false)
+    private Boolean aceitaPoliticaPrivacidade = false;
+    @Column(name = "data_consentimento_privac")
+    private LocalDateTime dataConsentimentoPrivacidade;
 
 
 }

@@ -2,10 +2,9 @@ package com.testefinal.demofinal.api.controller;
 
 import com.testefinal.demofinal.application.service.FuncionarioService;
 import com.testefinal.demofinal.domain.model.Funcionario;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +21,7 @@ public class FuncionarioController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Funcionario> cadastrar(@RequestBody Funcionario funcionario) {
         Funcionario funcionarioSalvo = funcionarioService.cadastrar(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioSalvo);

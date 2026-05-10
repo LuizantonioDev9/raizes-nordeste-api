@@ -1,7 +1,6 @@
 package com.testefinal.demofinal.domain.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,8 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import java.nio.file.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,10 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> tratarErroGenerico(Exception ex, HttpServletRequest request) {
         return montarErro(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "ERRO_INTERNO",
-                "Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.",
-                request
+                HttpStatus.INTERNAL_SERVER_ERROR, "ERRO_INTERNO", "Ocorreu um erro inesperado no servidor. Tente novamente mais tarde.", request
         );
     }
 
@@ -48,16 +43,23 @@ public class GlobalExceptionHandler {
         return montarErro(HttpStatus.CONFLICT, "CONFLITO_DE_DADOS", ex.getMessage(), request);
     }
 
-    // 401
-    @ExceptionHandler(NaoAutorizadoException.class)
-    public ResponseEntity<Map<String,Object>> tratarLogin(NaoAutorizadoException ex, HttpServletRequest request) {
-        return montarErro(HttpStatus.UNAUTHORIZED, "NAO_AUTORIZADO", ex.getMessage(), request);
+    // 403
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> tratarAcessoNegado(AccessDeniedException ex, HttpServletRequest request) {
+        return montarErro(HttpStatus.FORBIDDEN, "ACESSO_NEGADO", "Acesso negado. Usuário sem permissão para executar esta ação.", request
+        );
     }
 
     // 404
     @ExceptionHandler(NaoEncontradoException.class)
     public ResponseEntity<Map<String,Object>> tratarNaoEncontrado(NaoEncontradoException ex, HttpServletRequest request) {
         return montarErro(HttpStatus.NOT_FOUND, "NAO_ENCONTRADO", ex.getMessage(), request);
+    }
+
+    // 401
+    @ExceptionHandler(NaoAutorizadoException.class)
+    public ResponseEntity<Map<String,Object>> tratarLogin(NaoAutorizadoException ex, HttpServletRequest request) {
+        return montarErro(HttpStatus.UNAUTHORIZED, "NAO_AUTORIZADO", ex.getMessage(), request);
     }
 
     // 400
@@ -67,7 +69,6 @@ public class GlobalExceptionHandler {
         if (ex instanceof MethodArgumentNotValidException validEx) {
             msg = validEx.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         }
-
         return montarErro(HttpStatus.BAD_REQUEST, "ERRO_VALIDACAO", msg, request);
     }
 

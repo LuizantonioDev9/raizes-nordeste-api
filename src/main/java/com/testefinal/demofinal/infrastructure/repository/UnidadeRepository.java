@@ -7,5 +7,4 @@ import java.util.UUID;
 
 public interface UnidadeRepository extends JpaRepository<Unidade, UUID> {
     boolean existsByNome(String nome);
-
 }

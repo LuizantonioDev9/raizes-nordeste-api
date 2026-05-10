@@ -8,6 +8,7 @@ import com.testefinal.demofinal.domain.model.Unidade;
 import com.testefinal.demofinal.infrastructure.repository.UnidadeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,17 +28,20 @@ public class UnidadeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Unidade> criarUnidade(@RequestBody UnidadeDTO unidade) {
         Unidade unidadeCriada = unidadeService.cadastrarUnidade(unidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(unidadeCriada);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Unidade>> listarUnidades() {
         return ResponseEntity.ok(unidadeService.listarUnidades());
     }
 
     @GetMapping("/{id}/produtos")
+    @PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN', 'FUNCIONARIO')")
     public ResponseEntity<CatalogoUnidadeResponseDTO> listarProdutosDaUnidade(@PathVariable UUID id) {
         return ResponseEntity.ok(estoqueService.listarProdutosPorUnidade(id));
     }

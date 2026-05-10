@@ -22,6 +22,10 @@ public class ProdutoService {
         if(produto.getPreco() == null || produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValidaRegraException("O preço do produto deve ser maior que zero");
         }
+
+        if (produto.getPreco().compareTo(new BigDecimal("1000.00")) > 0) {
+            throw new ValidaRegraException("O preço do produto não pode ultrapassar R$ 1.000,00.");
+        }
         return produtoRepository.save(produto);
     }
     public Produto buscarProduto(Produto produto) {

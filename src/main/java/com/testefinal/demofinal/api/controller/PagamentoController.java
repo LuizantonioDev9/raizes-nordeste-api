@@ -7,6 +7,7 @@ import com.testefinal.demofinal.api.DTO.PedidoResponseDTO;
 import com.testefinal.demofinal.application.service.PagamentoService;
 import com.testefinal.demofinal.domain.model.Pedido;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PagamentoController {
 
 
     @PostMapping("/mock-confirmacao")
+    @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<PagamentoResponseDTO> confirmarPagamentoMock(@RequestBody PagamentoRequestDTO request) {
         PagamentoResponseDTO resposta = pagamentoService.confirmarPagamentoMock(
                 request.pedidoId(),

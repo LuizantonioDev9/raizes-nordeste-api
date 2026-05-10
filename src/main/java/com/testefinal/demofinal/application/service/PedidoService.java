@@ -7,6 +7,7 @@ import com.testefinal.demofinal.domain.enums.CanalPedido;
 import com.testefinal.demofinal.domain.enums.StatusPedido;
 import com.testefinal.demofinal.domain.exception.*;
 import com.testefinal.demofinal.domain.model.*;
+import com.testefinal.demofinal.infrastructure.integration.log.LogService;
 import com.testefinal.demofinal.infrastructure.repository.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,8 @@ public class PedidoService {
 
     private final EstoqueService estoqueService;
 
+    private final LogService logService;
+
 
     public PedidoService(PedidoRepository pedidoRepository,
                          ClienteRepository clienteRepository,
@@ -44,15 +47,15 @@ public class PedidoService {
                          ProdutoRepository produtoRepository,
                          CupomService cupomService,
                          CupomRepository cupomRepository,
-                         EstoqueService estoqueService) {
+                         EstoqueService estoqueService,LogService logService) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
         this.unidadeRepository = unidadeRepository;
         this.produtoRepository = produtoRepository;
         this.cupomService = cupomService;
         this.cupomRepository = cupomRepository;
-
         this.estoqueService = estoqueService;
+        this.logService = logService;
     }
 
     @Transactional
@@ -63,6 +66,8 @@ public class PedidoService {
         validarCupom(pedido);
         validarItensPedido(pedido);
 
+        regraDeDescontoUnico(pedido);
+
         recalcular(pedido);
 
         validarProgramaFidelidade(pedido);
@@ -70,7 +75,11 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.CRIADO);
         pedido.setDataCriacao(LocalDateTime.now());
 
-        return pedidoRepository.save(pedido);
+        Pedido pedidoLog = pedidoRepository.save(pedido);
+
+        logService.auditoria("Pedido criado com sucesso. pedidoId = " + pedidoLog.getId() + ", canalPedido = " + pedidoLog.getCanalPedido() + ", usuario = " + getUsuarioLogado());
+
+        return pedidoLog;
 
     }
 
@@ -82,8 +91,9 @@ public class PedidoService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String permissoes = auth.getAuthorities().toString();
 
+        //representa atendimento presencial registrado por funcionario/admin
         if (permissoes.contains("ROLE_CLIENTE") && "BALCAO".equalsIgnoreCase(pedido.getCanalPedido())) {
-            throw new NegocioException("Clientes não podem realizar pedidos via canal BALCAO");
+            throw new NegocioException("Ops! Parece que você não tem permissão para acessar o Canal Balcão");
         }
     }
 
@@ -144,7 +154,7 @@ public class PedidoService {
             Cliente cliente = pedido.getCliente();
 
             if (cliente == null) {
-                throw new NegocioException("É necessario identificar o cliente para os pontos de fidelidade");
+                throw new ValidaRegraException("É necessario identificar o cliente para os pontos de fidelidade");
             }
 
             if (!Boolean.TRUE.equals(cliente.getParticiparFidelidade())) {
@@ -167,16 +177,21 @@ public class PedidoService {
     }
 
 
+    //Regra financeira
+    public void regraDeDescontoUnico(Pedido pedido) {
+        boolean possuiCupom = pedido.getCupom() != null;
+        boolean possuiPontos = pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0;
+
+        if (possuiCupom && possuiPontos) {
+            throw new NegocioException("O pedido não pode utilizar cupom e pontos de fidelidade ao mesmo tempo.");
+        }
+    }
+
+
 
     private void processarNovoItem(Pedido pedido, ItemPedido item) {
-        System.out.println("ENTROU EM PROCESSAR ITEM");
-        System.out.println("ITEM: " + item);
-        System.out.println("PRODUTO: " + item.getProduto());
-        System.out.println("PRODUTO ID: " + (item.getProduto() != null ? item.getProduto().getId() : null));
-
-
         if (item.getQuantidade() <= 0) {
-            throw new NegocioException("A quantidade do produto precisa ser maior que zero.");
+            throw new ValidaRegraException("A quantidade do produto precisa ser maior que zero.");
         }
 
         Produto produto = produtoRepository.findById(item.getProduto().getId())
@@ -198,6 +213,8 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado"));
 
+        validarCanalPedido(pedido);
+
         if (pedido.getStatus() != StatusPedido.CRIADO) {
             throw new NegocioException("Pedido precisa estar em aberto para adicionar itens");
         }
@@ -206,7 +223,6 @@ public class PedidoService {
 
         recalcular(pedido);
 
-//        estoqueService.validarEstoque(produto.getId(), pedido.getUnidade().getId(), itemPedido.getQuantidade());
         return pedidoRepository.saveAndFlush(pedido);
     }
 
@@ -245,18 +261,21 @@ public class PedidoService {
 
         if (pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0) {
             Cliente cliente = pedido.getCliente();
-            //pega o saldo atual e soma os pontos que ele tinha gastado
             cliente.setSaldoPontos(cliente.getSaldoPontos() + pedido.getPontosResgate());
-            //Opcional zera os pontos do pedido para não estornar duas vezes em caso de bug
             pedido.setPontosResgate(0);
             pedido.setDescontoFidelidade(BigDecimal.ZERO);
 
             clienteRepository.save(cliente);
         }
 
+
         pedido.setStatus(StatusPedido.CANCELADO);
 
-        return pedidoRepository.save(pedido);
+        Pedido pedidoLog = pedidoRepository.save(pedido);
+
+        logService.auditoria("Pedido cancelado com sucesso. pedidoId=" + pedidoLog.getId() + ", usuario=" + getUsuarioLogado());
+
+        return pedidoLog;
     }
 
     public Optional<Pedido> buscarPedido(UUID id) {
@@ -285,8 +304,17 @@ public class PedidoService {
             throw new NegocioException("Não é possível aplicar cupom neste pedido");
         }
 
+        if (pedido.getCupom() != null) {
+            throw new NegocioException("Este pedido já tem o cupom " + pedido.getCupom().getCodigo() + " aplicado.");
+        }
+
+        if (pedido.getPontosResgate() != null && pedido.getPontosResgate() > 0) {
+            throw new NegocioException("Não é possível aplicar cupom em pedido que já utiliza pontos de fidelidade.");
+        }
+
+
         Cupom cupom = cupomRepository.findByCodigo(codigo)
-                .orElseThrow(() -> new CupomNaoEncontradoException("Cupom não encontrado"));
+                .orElseThrow(() -> new NaoEncontradoException("Cupom não encontrado"));
 
         pedido.setCupom(cupom);
 
@@ -326,6 +354,7 @@ public class PedidoService {
 
         return new PedidoResponseDTO(
                 pedido.getId(),
+                pedido.getCliente() != null ? pedido.getCliente().getId() : null,
                 pedido.getCanalPedido(),
                 pedido.getStatus().name(),
                 pedido.getTotal(),
@@ -346,8 +375,18 @@ public class PedidoService {
             throw new NegocioException("Pedido precisa estar pago para ir para preparo");
         }
 
+        StatusPedido statusAnterior = pedido.getStatus();
+
         pedido.setStatus(StatusPedido.EM_PREPARO);
-        return pedidoRepository.save(pedido);
+
+        Pedido pedidoLog = pedidoRepository.save(pedido);
+
+        logService.auditoria("Status do pedido alterado. pedidoId=" + pedidoLog.getId()
+                + ", statusAnterior=" + statusAnterior
+                + ", novoStatus=" + pedidoLog.getStatus()
+                + ", usuario=" + getUsuarioLogado());
+
+        return pedidoLog;
     }
 
     @Transactional
@@ -359,8 +398,19 @@ public class PedidoService {
             throw new NegocioException("Pedido precisa estar em preparo");
         }
 
+        StatusPedido statusAnterior = pedido.getStatus();
+
         pedido.setStatus(StatusPedido.PRONTO);
-        return pedidoRepository.save(pedido);
+
+        Pedido pedidoLog = pedidoRepository.save(pedido);
+
+        logService.auditoria("Status do pedido alterado. pedidoId=" + pedidoLog.getId()
+                + ", statusAnterior=" + statusAnterior
+                + ", novoStatus=" + pedidoLog.getStatus()
+                + ", usuario=" + getUsuarioLogado());
+
+
+        return pedidoLog;
     }
 
     @Transactional
@@ -373,6 +423,8 @@ public class PedidoService {
             throw new NegocioException("Pedido precisa estar pronto");
         }
 
+        StatusPedido statusAnterior = pedido.getStatus();
+
         if (pedido.getCanalPedido().equals(CanalPedido.APP.name()) || pedido.getCanalPedido().equals(CanalPedido.WEB.name())) {
             pedido.setStatus(StatusPedido.ENTREGUE);
         } else {
@@ -380,7 +432,16 @@ public class PedidoService {
             pedido.setStatus(StatusPedido.RETIRADO);
         }
 
-        return pedidoRepository.save(pedido);
+        Pedido pedidoLog = pedidoRepository.save(pedido);
+
+        logService.auditoria("Pedido finalizado. pedidoId="
+                + pedidoLog.getId()
+                + ", canalPedido=" + pedidoLog.getCanalPedido()
+                + ", statusAnterior=" + statusAnterior
+                + ", novoStatus=" + pedidoLog.getStatus()
+                + ", usuario=" + getUsuarioLogado());
+
+        return pedidoLog;
     }
 
 
@@ -390,12 +451,14 @@ public class PedidoService {
                 .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado com o ID: " + pedidoId));
     }
 
+
     @Transactional(readOnly = true)
     public PedidoResponseDTO buscarMeuCarrinho() {
         String email = getUsuarioLogado();
 
         Cliente cliente = clienteRepository.findByEmail(email)
                 .orElseThrow(() -> new NaoEncontradoException("Cliente não encontrado"));
+
         Pedido carrinhoAberto = pedidoRepository.findByClienteIdAndStatus(cliente.getId(), StatusPedido.CRIADO)
                 .orElseThrow(() -> new NaoEncontradoException("Você não possui nenhum carrinho em aberto no momento"));
 

@@ -1,19 +1,15 @@
 package com.testefinal.demofinal.application.service;
 
 import com.testefinal.demofinal.api.DTO.SaldoPontosDTO;
-import com.testefinal.demofinal.domain.exception.ClienteNaoEncontrado;
 import com.testefinal.demofinal.domain.exception.ConflitoException;
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
-import com.testefinal.demofinal.domain.exception.NegocioException;
 import com.testefinal.demofinal.domain.model.Cliente;
-import com.testefinal.demofinal.domain.model.Pedido;
+import com.testefinal.demofinal.infrastructure.integration.log.LogService;
 import com.testefinal.demofinal.infrastructure.repository.ClienteRepository;
-import com.testefinal.demofinal.infrastructure.repository.PedidoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,9 +17,11 @@ import java.util.UUID;
 public class FidelidadeService {
 
     private final ClienteRepository clienteRepository;
+    private final LogService logService;
 
-    public FidelidadeService(ClienteRepository clienteRepository, PedidoRepository pedidoRepository) {
+    public FidelidadeService(ClienteRepository clienteRepository, LogService logService) {
         this.clienteRepository = clienteRepository;
+        this.logService = logService;
     }
 
     @Transactional
@@ -40,6 +38,10 @@ public class FidelidadeService {
         cliente.setSaldoPontos(50);
 
         clienteRepository.save(cliente);
+
+        logService.auditoria("Cliente aderiu ao programa de fidelidade. clienteId="
+                + cliente.getId()
+                + ", usuario=" + getUsuarioLogado());
 
     }
 

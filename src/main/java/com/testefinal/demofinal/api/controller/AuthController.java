@@ -3,14 +3,14 @@ package com.testefinal.demofinal.api.controller;
 import com.testefinal.demofinal.api.DTO.LoginDTO;
 import com.testefinal.demofinal.api.DTO.TokenResponseDTO;
 import com.testefinal.demofinal.api.DTO.UsuarioResumoDTO;
-import com.testefinal.demofinal.application.service.JwtService;
-import com.testefinal.demofinal.domain.exception.EmailSenhaInvalidoException;
+import com.testefinal.demofinal.infrastructure.security.JwtService;
 import com.testefinal.demofinal.domain.exception.NaoAutorizadoException;
 import com.testefinal.demofinal.domain.model.Cliente;
 import com.testefinal.demofinal.domain.model.Funcionario;
+import com.testefinal.demofinal.infrastructure.integration.log.LogService;
 import com.testefinal.demofinal.infrastructure.repository.ClienteRepository;
 import com.testefinal.demofinal.infrastructure.repository.FuncionarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,17 +28,19 @@ public class AuthController {
     private final FuncionarioRepository funcionarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final LogService logService;
 
 
-    public AuthController(ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository,PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthController(ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder, JwtService jwtService, LogService logService) {
         this.clienteRepository = clienteRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.logService = logService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDTO> login(@RequestBody LoginDTO dto) {
+    public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginDTO dto) {
 
         var clienteOpt = clienteRepository.findByEmail(dto.email());
         if (clienteOpt.isPresent()) {
@@ -47,9 +48,14 @@ public class AuthController {
             validarSenha(dto.senha(), cliente.getSenha());
 
             String token = gerarToken(cliente.getEmail(), cliente.getSenha(), cliente.getPerfil().name());
-            UsuarioResumoDTO usuarioLogado = new UsuarioResumoDTO(cliente.getId(),cliente.getNome(), cliente.getPerfil().name());
-            return ResponseEntity.ok(new TokenResponseDTO(token, "Bearer", 3600, usuarioLogado));
+            UsuarioResumoDTO usuarioLogado = new UsuarioResumoDTO(
+                    cliente.getId(),
+                    cliente.getNome(),
+                    cliente.getPerfil().name());
 
+            logService.auditoria("Login realizado com sucesso. usuario=" + dto.email());
+
+            return ResponseEntity.ok(new TokenResponseDTO(token, "Bearer", 3600, usuarioLogado));
         }
 
         var funcionarioOpt = funcionarioRepository.findByEmail(dto.email());
@@ -59,6 +65,8 @@ public class AuthController {
 
             String token = gerarToken(funcionario.getEmail(), funcionario.getSenha(), funcionario.getPerfil().name());
             UsuarioResumoDTO usuarioLogado = new UsuarioResumoDTO(funcionario.getId(),funcionario.getNome(), funcionario.getPerfil().name());
+
+            logService.auditoria("Login realizado com sucesso. usuario= " + dto.email());
 
             return ResponseEntity.ok(new TokenResponseDTO(token, "Bearer", 3600, usuarioLogado));
         }

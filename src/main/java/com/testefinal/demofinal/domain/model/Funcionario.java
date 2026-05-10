@@ -1,6 +1,6 @@
 package com.testefinal.demofinal.domain.model;
 
-import com.testefinal.demofinal.domain.enums.FuncionarioCargo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.testefinal.demofinal.domain.enums.Perfil;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,6 +23,7 @@ public class Funcionario {
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
+    @JsonIgnore
     private String senha;
     @Column(nullable = false)
     private String telefone;

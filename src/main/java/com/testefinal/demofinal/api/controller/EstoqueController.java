@@ -6,6 +6,7 @@ import com.testefinal.demofinal.domain.model.Estoque;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class EstoqueController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Estoque> cadastrar(@RequestBody EstoqueRequestDTO estoque) {
         Estoque estoqueSalvo = estoqueService.cadastrarEstoque(
                 estoque.produtoId(),
@@ -32,11 +34,13 @@ public class EstoqueController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'FUNCIONARIO')")
     public ResponseEntity<Estoque> buscarEstoque(@RequestParam UUID produtoId, @RequestParam UUID unidadeId) {
         return ResponseEntity.ok(estoqueService.buscarEstoque(produtoId, unidadeId));
     }
 
     @PostMapping("/saidas")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> saidaEstoque(@RequestBody @Valid EstoqueRequestDTO estoqueRequest) {
         estoqueService.saidaEstoque(
                 estoqueRequest.produtoId(),
@@ -48,6 +52,7 @@ public class EstoqueController {
 
 
     @PostMapping("/entradas")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> entradaEstoque(@RequestBody @Valid EstoqueRequestDTO estoqueRequest) {
         estoqueService.entradaEstoque(
                 estoqueRequest.produtoId(),

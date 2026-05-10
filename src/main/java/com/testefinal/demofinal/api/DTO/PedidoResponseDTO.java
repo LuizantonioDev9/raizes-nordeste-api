@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public record PedidoResponseDTO(
-        UUID id,
+        UUID pedidoId,
+        UUID clienteId,
         String canalPedido,
         String status,
         BigDecimal totalPedido,

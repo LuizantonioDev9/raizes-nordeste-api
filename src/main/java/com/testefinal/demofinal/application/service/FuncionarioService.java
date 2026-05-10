@@ -3,8 +3,6 @@ package com.testefinal.demofinal.application.service;
 import com.testefinal.demofinal.domain.enums.Perfil;
 import com.testefinal.demofinal.domain.exception.ConflitoException;
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
-import com.testefinal.demofinal.domain.exception.NegocioException;
-import com.testefinal.demofinal.domain.exception.UnidadeNaoEncontradaException;
 import com.testefinal.demofinal.domain.model.Funcionario;
 import com.testefinal.demofinal.domain.model.Unidade;
 import com.testefinal.demofinal.infrastructure.repository.FuncionarioRepository;

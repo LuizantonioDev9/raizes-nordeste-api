@@ -3,10 +3,8 @@ package com.testefinal.demofinal.application.service;
 import com.testefinal.demofinal.api.DTO.UnidadeDTO;
 import com.testefinal.demofinal.domain.exception.ConflitoException;
 import com.testefinal.demofinal.domain.exception.NaoEncontradoException;
-import com.testefinal.demofinal.domain.exception.UnidadeNaoEncontradaException;
 import com.testefinal.demofinal.domain.model.Unidade;
 import com.testefinal.demofinal.infrastructure.repository.UnidadeRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

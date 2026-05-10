@@ -32,10 +32,10 @@ public class EstoqueService {
     @Transactional
     public Estoque cadastrarEstoque(UUID produtoId, UUID unidadeId, int quantidade) {
         Produto produto = produtoRepository.findById(produtoId)
-                .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrado"));
+                .orElseThrow(() -> new NaoEncontradoException("Produto não encontrado"));
 
         Unidade unidade = unidadeRepository.findById(unidadeId)
-                .orElseThrow(()-> new UnidadeNaoEncontradaException("Unidade não encontrada"));
+                .orElseThrow(()-> new NaoEncontradoException("Unidade não encontrada"));
 
 
         if(estoqueRepository.existsByProdutoIdAndUnidadeId(produtoId,unidadeId)) {
@@ -65,7 +65,7 @@ public class EstoqueService {
 
         //verifica se tem o produto suficiente antes de diminuir o estoque
         if(estoque.getQuantidade() < quantidade){
-            throw new NegocioException("Estoque insuficiente");
+            throw new ValidaRegraException("Estoque insuficiente");
         }
 
         estoque.setQuantidade(estoque.getQuantidade() - quantidade);
@@ -97,7 +97,7 @@ public class EstoqueService {
         }
 
         if(estoque.getQuantidade() < quantidade){
-            throw new NegocioException("Estoque insuficiente");
+            throw new ValidaRegraException("Estoque insuficiente");
         }
     }
 

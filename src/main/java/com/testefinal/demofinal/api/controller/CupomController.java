@@ -1,14 +1,11 @@
 package com.testefinal.demofinal.api.controller;
 
-import com.testefinal.demofinal.api.DTO.CupomRequestDTO;
 import com.testefinal.demofinal.api.DTO.CupomResponseDTO;
 import com.testefinal.demofinal.application.service.CupomService;
-import com.testefinal.demofinal.domain.exception.CupomNaoEncontradoException;
 import com.testefinal.demofinal.domain.model.Cupom;
-import com.testefinal.demofinal.infrastructure.repository.CupomRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,12 +22,14 @@ public class CupomController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Cupom> criarCupom(@RequestBody Cupom cupom) {
         Cupom cupomSalvo = cupomService.salvar(cupom);
         return ResponseEntity.status(HttpStatus.CREATED).body(cupomSalvo);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN', 'FUNCIONARIO')")
     public ResponseEntity<List<CupomResponseDTO>> listarCupons() {
         List<Cupom> cuponsNoBanco = cupomService.listarCuponsValidos();
 
@@ -50,10 +49,10 @@ public class CupomController {
         return ResponseEntity.status(HttpStatus.OK).body(clienteLista);
     }
 
-    @GetMapping("/{codigo}")
-    public ResponseEntity<Cupom> buscarPorCodigo(@PathVariable String codigo) {
-        return ResponseEntity.ok(cupomService.buscarPorCodigo(codigo));
-    }
+//    @GetMapping("/{codigo}")
+//    public ResponseEntity<Cupom> buscarPorCodigo(@PathVariable String codigo) {
+//        return ResponseEntity.ok(cupomService.buscarPorCodigo(codigo));
+//    }
 
 
 
