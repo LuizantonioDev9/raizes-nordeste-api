@@ -248,3 +248,12 @@ Ordem recomendada para execução dos testes:
 11. Cenários de erro
 
 A collection contém cenários positivos e negativos, incluindo login válido, acesso sem token, acesso sem permissão, criação de pedido, estoque insuficiente, pagamento mock aprovado, pagamento mock recusado e logs/auditoria.
+
+## Evidências e links da entrega
+
+- Repositório GitHub: https://github.com/LuizantonioDev9/raizes-nordeste-api
+- Swagger local: http://localhost:8090/swagger-ui/index.html
+- Especificação OpenAPI: http://localhost:8090/v3/api-docs
+- Collection Postman: `postman/Raizes do Nordeste API.postman_collection.json`
+- Environment Postman: `postman/raizes-do-nordeste.postman_environment.json`
+- Deploy: não aplicado nesta versão; execução local.
