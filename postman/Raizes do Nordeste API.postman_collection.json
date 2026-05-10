@@ -1,0 +1,1804 @@
+{
+  "info": {
+    "_postman_id": "9b11fa2a-fc2e-4623-a0ec-4a13bc2043b4",
+    "name": "Raizes do Nordeste API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41364046",
+    "_collection_link": "https://go.postman.co/collection/41364046-9b11fa2a-fc2e-4623-a0ec-4a13bc2043b4?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Auth/Login válido CLIENTE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Pega a resposta da API\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 2. Busca o token usando o nome exato do campo que sua API devolve\r",
+                  "var meuToken = jsonData.accessToken; \r",
+                  "\r",
+                  "// 3. Imprime no console para garantir que funcionou\r",
+                  "console.log(\"Token extraído: \", meuToken);\r",
+                  "\r",
+                  "// 4. Salva na variável global do Postman\r",
+                  "pm.globals.set(\"bearer\", meuToken);\r",
+                  "pm.environment.set(\"token\", meuToken); // Já salva na sua variável token também por precaução!"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"luizteste@email.com\",\r\n  \"senha\": \"Teste@123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth/Login válido ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Pega a resposta da API\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 2. Busca o token usando o nome exato do campo que sua API devolve\r",
+                  "var meuToken = jsonData.accessToken; \r",
+                  "\r",
+                  "// 3. Imprime no console para garantir que funcionou\r",
+                  "console.log(\"Token extraído: \", meuToken);\r",
+                  "\r",
+                  "// 4. Salva na variável global do Postman\r",
+                  "pm.globals.set(\"bearer\", meuToken);\r",
+                  "pm.environment.set(\"token\", meuToken); // Já salva na sua variável token também por precaução!"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@teste.com\",\r\n  \"senha\": \"123456\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth/Login válido FUNCIONARIO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Pega a resposta da API\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 2. Busca o token usando o nome exato do campo que sua API devolve\r",
+                  "var meuToken = jsonData.accessToken; \r",
+                  "\r",
+                  "// 3. Imprime no console para garantir que funcionou\r",
+                  "console.log(\"Token extraído: \", meuToken);\r",
+                  "\r",
+                  "// 4. Salva na variável global do Postman\r",
+                  "pm.globals.set(\"bearer\", meuToken);\r",
+                  "pm.environment.set(\"token\", meuToken); // Já salva na sua variável token também por precaução!"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"funcionario@teste.com\",\r\n  \"senha\": \"funcionario@123\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth/Login inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Pega a resposta da API\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 2. Busca o token usando o nome exato do campo que sua API devolve\r",
+                  "var meuToken = jsonData.accessToken; \r",
+                  "\r",
+                  "// 3. Imprime no console para garantir que funcionou\r",
+                  "console.log(\"Token extraído: \", meuToken);\r",
+                  "\r",
+                  "// 4. Salva na variável global do Postman\r",
+                  "pm.globals.set(\"bearer\", meuToken);\r",
+                  "pm.environment.set(\"token\", meuToken); // Já salva na sua variável token também por precaução!"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admininvalido@teste.com\",\r\n  \"senha\": \"123456\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Clientes/Cadastrar cliente válido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Luiz Teste\",\r\n  \"email\": \"luizteste@email.com\",\r\n  \"telefone\": \"75999999999\",\r\n  \"senha\": \"Teste@123456\",\r\n  \"aceitePoliticaPrivacidade\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clientes/Cadastrar cliente inválido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Maria Silva\",\r\n  \"email\": \"maria@email.com\",\r\n  \"telefone\": \"75999999999\",\r\n  \"senha\": \"123456,\r\n  \"aceitePoliticaPrivacidade\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clientes/Consultar cliente por e-mail Copy",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/email?email=luizteste@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "email"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "luizteste@email.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cupons",
+      "item": [
+        {
+          "name": "Cupons/Cadastrar cupom válido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cupons",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cupons"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cupons/Listar cupons",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cupons",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cupons"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estoque",
+      "item": [
+        {
+          "name": "Estoque/Cadastrar estoque válido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"produtoId\": \"5fcf9572-8cd0-4220-a3af-aca59f96d367\",\r\n  \"unidadeId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n  \"quantidade\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/estoques",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estoque/Cadastrar quantidade negativa",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"produtoId\": \"5fcf9572-8cd0-4220-a3af-aca59f96d367\",\r\n  \"unidadeId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n  \"quantidade\": -1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/estoques",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estoque/Cadastrar estoque insuficiente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"produtoId\": \"5fcf9572-8cd0-4220-a3af-aca59f96d367\",\r\n  \"unidadeId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n  \"quantidade\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/estoques",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estoque/Registrar saída de estoque",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/estoques/saida?produtoId=UUID_DO_PRODUTO&unidadeId=UUID_DA_UNIDADE&quantidade=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques",
+                "saida"
+              ],
+              "query": [
+                {
+                  "key": "produtoId",
+                  "value": "UUID_DO_PRODUTO"
+                },
+                {
+                  "key": "unidadeId",
+                  "value": "UUID_DA_UNIDADE"
+                },
+                {
+                  "key": "quantidade",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estoque/Registrar entrada de estoque",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"produtoId\": \"5fcf9572-8cd0-4220-a3af-aca59f96d367\",\r\n  \"unidadeId\": \"859b5aca-adca-46e9-b078-597c7efea98f\",\r\n  \"quantidade\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/estoques/entradas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques",
+                "entradas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estoque/Consultar estoque por produto e unidade",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/estoques?produtoId=UUID_DO_PRODUTO&unidadeId=UUID_DA_UNIDADE",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques"
+              ],
+              "query": [
+                {
+                  "key": "produtoId",
+                  "value": "UUID_DO_PRODUTO"
+                },
+                {
+                  "key": "unidadeId",
+                  "value": "UUID_DA_UNIDADE"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fidelidade",
+      "item": [
+        {
+          "name": "aderirFidelidade",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/fidelidade/aderir/94c8169c-e38c-4e3c-986d-82c1d50d2b50",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "fidelidade",
+                "aderir",
+                "94c8169c-e38c-4e3c-986d-82c1d50d2b50"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "visualizarMeusPontos Copy",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/fidelidade/meus-pontos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "fidelidade",
+                "meus-pontos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Funcionario",
+      "item": [
+        {
+          "name": "Funcionários/Cadastrar funcionário válido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Funcionario6\",\r\n  \"email\": \"funcionario6@teste.com\",\r\n  \"senha\": \"funcionario@123\",\r\n  \"telefone\": \"77989900000\",\r\n  \"perfil\": \"FUNCIONARIO\",\r\n  \"unidade\": {\r\n    \"id\": \"859b5aca-adca-46e9-b078-597c7efea98f\"\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/funcionarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "funcionarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Funcionários/Cadastrar funcionário inválido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Funcionario7\",\r\n  \"email\": \"funcionario7@teste.com\",\r\n  \"senha\": \"funcionario@123\",\r\n  \"telefone\": \"77989900000\",\r\n  \"perfil\": \"DONO DA EMPRESA\",\r\n  \"unidade\": {\r\n    \"id\": \"859b5aca-adca-46e9-b078-597c7efea98f\"\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/funcionarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "funcionarios"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pagamentos",
+      "item": [
+        {
+          "name": "Pagamentos/Mock aprovado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pedidoId\": \"05455ebb-8a0e-435e-8f6c-df3858902b94\",\r\n    \"sucesso\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pagamentos/mock-confirmacao",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagamentos",
+                "mock-confirmacao"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pagamentos/Mock recusado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pedidoId\": \"670809f9-124c-4400-84cd-926f52c41d85\",\r\n    \"sucesso\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pagamentos/mock-confirmacao",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagamentos",
+                "mock-confirmacao"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "Criação",
+          "item": [
+            {
+              "name": "Pedidos/Criação/Criar pedido válido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"unidadeId\": \"2e0e902d-de07-4682-91a0-621c91169c81\",\r\n  \"canalPedido\": \"BALCAO\",\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": \"610d1c4c-5e0f-493d-a5be-41b1f61c9bab\",\r\n      \"quantidade\": 1\r\n    }\r\n  ],\r\n  \"pontosResgate\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Criação/Criar pedido sem canalPedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"unidadeId\": \"2e0e902d-de07-4682-91a0-621c91169c81\",\r\n  \"canalPedido\": \"\",\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": \"610d1c4c-5e0f-493d-a5be-41b1f61c9bab\",\r\n      \"quantidade\": 1\r\n    }\r\n  ],\r\n  \"pontosResgate\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Criação/Criar pedido com unidade inexistente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"unidadeId\":\"11111111-1111-1111-1111-111111111111\",\r\n  \"canalPedido\": \"APP\",\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": \"610d1c4c-5e0f-493d-a5be-41b1f61c9bab\",\r\n      \"quantidade\": 1\r\n    }\r\n  ],\r\n  \"pontosResgate\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Criação/Criar pedido com estoque insuficiente Copy",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"unidadeId\": \"2e0e902d-de07-4682-91a0-621c91169c81\",\r\n  \"canalPedido\": \"APP\",\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": \"610d1c4c-5e0f-493d-a5be-41b1f61c9bab\",\r\n      \"quantidade\":12\r\n    }\r\n  ],\r\n  \"pontosResgate\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Itens",
+          "item": [
+            {
+              "name": "Pedidos/Itens/Adicionar item ao pedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"produtoId\": \"f9ce907b-abab-4c17-b8b6-879f29f177f0\",\r\n  \"quantidade\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/itens",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "itens"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Itens/Adicionar item com produto inexistente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"produtoId\": \"f9ce907b-abab-4c17-b8b6-879f29f177f0\",\r\n  \"quantidade\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/itens",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "itens"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Itens/Adicionar item com quantidade inválida",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"produtoId\": \"f9ce907b-abab-4c17-b8b6-879f29f177f0\",\r\n  \"quantidade\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/itens",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "itens"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Itens/Adicionar item com estoque insuficiente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"produtoId\": \"f9ce907b-abab-4c17-b8b6-879f29f177f0\",\r\n  \"quantidade\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/itens",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "itens"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Consulta",
+          "item": [
+            {
+              "name": "Pedidos/Consulta/Listar pedidos por canal",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos?canalPedido=APP",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos"
+                  ],
+                  "query": [
+                    {
+                      "key": "canalPedido",
+                      "value": "APP"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Consulta/Listar pedidos por canal sem permissão",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos?canalPedido=BALCAO",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos"
+                  ],
+                  "query": [
+                    {
+                      "key": "canalPedido",
+                      "value": "BALCAO"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Consulta/Consultar meus pedidos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/meu-carrinho",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "meu-carrinho"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Consulta/Consultar pedidos por id",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/e9045588-d265-4659-a715-ab4279f5a075",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "e9045588-d265-4659-a715-ab4279f5a075"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Cupom",
+          "item": [
+            {
+              "name": "Pedidos/Cupom/Aplicar cupom ao pedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"codigo\": \"PROMO10\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/cupom",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "cupom"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Cupom/Aplicar segundo cupom no pedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"codigo\": \"PROMO10\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/cupom",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "cupom"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Cupom/Aplicar cupom inexistente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"codigo\": \"BK10\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/cupom",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "cupom"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Status",
+          "item": [
+            {
+              "name": "Pedidos/Status/Atualizar para EM_PREPARO",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/preparar",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "preparar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Status/Atualizar status sem permissão",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/preparar",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "preparar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Status/Atualizar para PRONTO",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/pronto",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "pronto"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Status/Finalizar pedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/finalizar",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "finalizar"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Status/Cancelar pedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/cancelar",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "cancelar"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Produtos/Cadastrar produto válido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Pacote de Pé de moleque\",\r\n  \"descricao\": \"10 pé de moleque\",\r\n  \"preco\": 16.99\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Produtos/Cadastrar produto sem permissão",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Sorvete de paçoca\",\r\n  \"descricao\": \"sorvete feito com a paçoquita\",\r\n  \"preco\": 10.99\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Produtos/Cadastrar produto sem token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Pacote de Pé de moleque\",\r\n  \"descricao\": \"10 pé de moleque\",\r\n  \"preco\": 16.99\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Produtos/Cadastrar preço inválido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Pacote de Pé de moleque\",\r\n  \"descricao\": \"10 pé de moleque\",\r\n  \"preco\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Produtos/Listar produtos",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Unidades",
+      "item": [
+        {
+          "name": "Unidades/Cadastrar unidade válida",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Unidade Cidade Nova\",\r\n  \"cidade\": \"Estância\",\r\n  \"endereco\": \"Avenida Jornalista Augusto Gomes, 23\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/unidades",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "unidades"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unidades/Cadastrar unidade inexistente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Unidade Cidade Nova\",\r\n  \"cidade\": \"Estância\",\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/unidades",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "unidades"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unidades/Consultar cardápio da unidade",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/unidades/unidadeId/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "unidades",
+                "unidadeId",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
