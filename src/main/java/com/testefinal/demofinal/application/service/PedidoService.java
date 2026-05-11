@@ -465,5 +465,20 @@ public class PedidoService {
         return toDTO(carrinhoAberto);
     }
 
+    @Transactional(readOnly = true)
+    public PedidoResponseDTO acompanharStatus(UUID pedidoId) {
+        String email = getUsuarioLogado();
+
+        Cliente cliente = clienteRepository.findByEmail(email)
+                .orElseThrow(() -> new NaoEncontradoException("Cliente não encontrado"));
+
+        Pedido pedido = pedidoRepository.findByIdAndClienteId(pedidoId, cliente.getId())
+                .orElseThrow(() -> new NaoEncontradoException("Pedido não encontrado para este cliente"));
+
+        return toDTO(pedido);
+    }
+
+
+
 
 }

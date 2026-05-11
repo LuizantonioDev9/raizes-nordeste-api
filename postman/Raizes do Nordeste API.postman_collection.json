@@ -305,7 +305,7 @@
           "response": []
         },
         {
-          "name": "Clientes/Consultar cliente por e-mail",
+          "name": "Clientes/Consultar cliente por e-mail Copy",
           "request": {
             "auth": {
               "type": "bearer",
@@ -650,7 +650,7 @@
           "response": []
         },
         {
-          "name": "visualizarMeusPontos",
+          "name": "visualizarMeusPontos Copy",
           "request": {
             "auth": {
               "type": "bearer",
@@ -776,7 +776,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"pedidoId\": \"05455ebb-8a0e-435e-8f6c-df3858902b94\",\r\n    \"sucesso\": true\r\n}",
+              "raw": "{\r\n    \"pedidoId\": \"543fba9f-edde-4e22-a127-f7e1989d6977\",\r\n    \"sucesso\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -950,7 +950,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Criação/Criar pedido com estoque insuficiente",
+              "name": "Pedidos/Criação/Criar pedido com estoque insuficiente Copy",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1204,7 +1204,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Consulta/Consultar meus pedidos",
+              "name": "Pedidos/Consulta/Consultar meu carrinho",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1226,6 +1226,35 @@
                   "path": [
                     "pedidos",
                     "meu-carrinho"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pedidos/Consulta/Consultar status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/status",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "status"
                   ]
                 }
               },

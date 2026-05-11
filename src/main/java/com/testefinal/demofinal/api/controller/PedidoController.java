@@ -109,6 +109,11 @@ public class PedidoController {
         return ResponseEntity.ok(carrinho);
     }
 
+    @GetMapping("/{id}/status")
+    public ResponseEntity<PedidoResponseDTO> acompanharStatus(@PathVariable UUID id) {
+        return ResponseEntity.ok(pedidoService.acompanharStatus(id));
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'FUNCIONARIO')")
     public ResponseEntity<List<PedidoResponseDTO>> listarPedidosPorCanal(@RequestParam(required = false)CanalPedido canalPedido) {
