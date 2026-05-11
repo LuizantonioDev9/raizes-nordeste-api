@@ -2,7 +2,9 @@
 
 ## Descrição
 
-A Raízes do Nordeste API é uma aplicação Back-end REST desenvolvida para o Projeto Multidisciplinar da trilha Back-End. O projeto foi baseado no estudo de caso da rede Raízes do Nordeste, uma franquia de lanchonetes nordestinas em expansão, com múltiplas unidades, diferentes canais de atendimento, controle de estoque local, pedidos, fidelização, segurança e rastreabilidade operacional.
+A Raízes do Nordeste API é uma aplicação Back-end REST desenvolvida para o Projeto Multidisciplinar da trilha Back-End.
+
+O projeto foi baseado no estudo de caso da rede Raízes do Nordeste, uma franquia de lanchonetes nordestinas em expansão, com múltiplas unidades, diferentes canais de atendimento, controle de estoque local, pedidos, fidelização, segurança e rastreabilidade operacional.
 
 A API permite gerenciar clientes, funcionários, unidades, produtos, estoque, cupons, pedidos, pagamento mock, atualização de status e programa de fidelidade. O sistema também registra o canal de origem do pedido, como APP, WEB, TOTEM ou BALCAO, permitindo acompanhar e organizar os pedidos conforme o canal utilizado.
 
@@ -208,7 +210,7 @@ Como melhoria futura, as alterações estruturais do banco poderão ser controla
 src/main/resources/db/migration
 ```
 
-O projeto possui seed automático de dados iniciais para facilitar os testes locais. Ao subir a aplicação com um banco novo, são criados um administrador inicial, uma unidade, produtos de exemplo, estoque inicial e um cupom de teste.
+O projeto possui seed automático de dados iniciais para facilitar os testes locais. Ao subir a aplicação com um banco novo, são criados usuários iniciais, unidade, produtos, estoque inicial e cupom de teste.
 
 ---
 
@@ -216,11 +218,12 @@ O projeto possui seed automático de dados iniciais para facilitar os testes loc
 
 Ao executar a aplicação em um banco novo, o sistema cria automaticamente alguns dados iniciais para facilitar os testes locais da API.
 
-Esses dados são criados por uma classe de inicialização executada na subida da aplicação. O objetivo é evitar que o avaliador precise cadastrar manualmente um usuário administrador, unidade, produtos, estoque e cupom antes de testar os principais fluxos.
+Esses dados são criados por uma classe de inicialização executada na subida da aplicação. O objetivo é evitar que o avaliador precise cadastrar manualmente um usuário administrador, funcionário, unidade, produtos, estoque e cupom antes de testar os principais fluxos.
 
 Dados criados automaticamente:
 
 - usuário administrador inicial;
+- usuário funcionário inicial;
 - unidade inicial;
 - produtos de exemplo;
 - estoque inicial dos produtos na unidade inicial;
@@ -231,13 +234,24 @@ Credenciais do administrador inicial:
 ```text
 E-mail: admin@teste.com
 Senha: 123456
+Perfil: ADMIN
+```
+
+Credenciais do funcionário inicial:
+
+```text
+E-mail: funcionario@teste.com
+Senha: 123456
+Perfil: FUNCIONARIO
 ```
 
 Dados de exemplo criados:
 
 ```text
 Unidade:
-- Unidade Inicial
+- Unidade Salvador Shopping
+- Cidade: Salvador
+- Endereço: Avenida Tancredo Neves, 2915 - Caminho das Árvores, Salvador - BA
 
 Produtos:
 - Carne de Sol com Macaxeira
@@ -245,7 +259,7 @@ Produtos:
 - Suco de Cajá
 
 Estoque:
-- 20 unidades de cada produto na Unidade Inicial
+- 20 unidades de cada produto na Unidade Salvador Shopping
 
 Cupom:
 - Código: PROMO10
@@ -254,26 +268,18 @@ Cupom:
 - Validade: 30 dias a partir da criação
 ```
 
-Esses dados são criados apenas caso ainda não existam no banco. Dessa forma, ao reiniciar a aplicação, o sistema evita cadastrar unidades, produtos, estoque ou cupons duplicados.
+Esses dados são criados apenas caso ainda não existam no banco. Dessa forma, ao reiniciar a aplicação, o sistema evita cadastrar unidades, produtos, estoque, usuários ou cupons duplicados.
 
-Para isso, o seed verifica a existência de registros pelo nome ou código antes de criar novos dados, por exemplo:
+Para isso, o seed verifica a existência de registros pelo nome, e-mail, código ou vínculo entre produto e unidade antes de criar novos dados, por exemplo:
 
 ```text
 findByNomeIgnoreCase
+findByEmail
 findByCodigo
 existsByProdutoIdAndUnidadeId
 ```
 
-Com esses dados iniciais, o fluxo básico de teste fica mais simples:
-
-1. Subir o PostgreSQL com Docker;
-2. Iniciar a API;
-3. Fazer login com o administrador inicial;
-4. Usar o token JWT para testar rotas protegidas;
-5. Criar pedidos usando os produtos e estoques já cadastrados;
-6. Aplicar o cupom `PROMO10`;
-7. Executar o pagamento mock;
-8. Atualizar o status do pedido.
+Com esses dados iniciais, o ambiente já fica preparado para os testes principais da API.
 
 ---
 
@@ -408,12 +414,16 @@ Após subir a aplicação em um banco novo, o fluxo recomendado para teste é:
 ```
 
 5. Copiar o token JWT retornado;
-6. Usar o token no header `Authorization`;
-7. Testar as rotas protegidas;
-8. Criar pedido usando a unidade, produtos e estoque iniciais;
-9. Aplicar cupom `PROMO10`, se desejado;
-10. Executar pagamento mock;
-11. Atualizar status do pedido.
+6. Usar o token do ADMIN para testar rotas protegidas administrativas, como cadastro de produtos, estoque, funcionários e consulta de recursos;
+7. Cadastrar um cliente de teste pela API;
+8. Fazer login com o cliente cadastrado;
+9. Criar um pedido usando a unidade, produtos e estoque iniciais;
+10. Aplicar o cupom `PROMO10`, caso o pedido não esteja utilizando pontos de fidelidade;
+11. Executar o pagamento mock;
+12. Fazer login novamente como ADMIN ou FUNCIONARIO;
+13. Atualizar o status do pedido.
+
+Observação: a criação do pedido pode ser feita por cliente autenticado nos canais `APP` e `WEB`. Para operações de balcão, o pedido pode ser realizado por funcionário ou administrador, conforme a regra de atendimento presencial. A atualização de status do pedido deve ser feita por perfil `ADMIN` ou `FUNCIONARIO`.
 
 ---
 
