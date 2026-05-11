@@ -208,11 +208,76 @@ Como melhoria futura, as alterações estruturais do banco poderão ser controla
 src/main/resources/db/migration
 ```
 
-Não há seed automatizado nesta versão. Os dados de teste podem ser cadastrados pela API usando o Postman ou Swagger.
+O projeto possui seed automático de dados iniciais para facilitar os testes locais. Ao subir a aplicação com um banco novo, são criados um administrador inicial, uma unidade, produtos de exemplo, estoque inicial e um cupom de teste.
 
 ---
 
-## 5. Como iniciar a API
+## 5. Dados iniciais de teste
+
+Ao executar a aplicação em um banco novo, o sistema cria automaticamente alguns dados iniciais para facilitar os testes locais da API.
+
+Esses dados são criados por uma classe de inicialização executada na subida da aplicação. O objetivo é evitar que o avaliador precise cadastrar manualmente um usuário administrador, unidade, produtos, estoque e cupom antes de testar os principais fluxos.
+
+Dados criados automaticamente:
+
+- usuário administrador inicial;
+- unidade inicial;
+- produtos de exemplo;
+- estoque inicial dos produtos na unidade inicial;
+- cupom percentual de teste.
+
+Credenciais do administrador inicial:
+
+```text
+E-mail: admin@teste.com
+Senha: 123456
+```
+
+Dados de exemplo criados:
+
+```text
+Unidade:
+- Unidade Inicial
+
+Produtos:
+- Carne de Sol com Macaxeira
+- Cuscuz Recheado
+- Suco de Cajá
+
+Estoque:
+- 20 unidades de cada produto na Unidade Inicial
+
+Cupom:
+- Código: PROMO10
+- Tipo: PERCENTUAL
+- Desconto: 10%
+- Validade: 30 dias a partir da criação
+```
+
+Esses dados são criados apenas caso ainda não existam no banco. Dessa forma, ao reiniciar a aplicação, o sistema evita cadastrar unidades, produtos, estoque ou cupons duplicados.
+
+Para isso, o seed verifica a existência de registros pelo nome ou código antes de criar novos dados, por exemplo:
+
+```text
+findByNomeIgnoreCase
+findByCodigo
+existsByProdutoIdAndUnidadeId
+```
+
+Com esses dados iniciais, o fluxo básico de teste fica mais simples:
+
+1. Subir o PostgreSQL com Docker;
+2. Iniciar a API;
+3. Fazer login com o administrador inicial;
+4. Usar o token JWT para testar rotas protegidas;
+5. Criar pedidos usando os produtos e estoques já cadastrados;
+6. Aplicar o cupom `PROMO10`;
+7. Executar o pagamento mock;
+8. Atualizar o status do pedido.
+
+---
+
+## 6. Como iniciar a API
 
 Antes de iniciar a aplicação, verifique se o container PostgreSQL está rodando:
 
@@ -240,7 +305,7 @@ http://localhost:8090
 
 ---
 
-## 6. Swagger/OpenAPI
+## 7. Swagger/OpenAPI
 
 Com a API em execução, acesse a documentação pelo navegador:
 
@@ -258,7 +323,7 @@ A documentação Swagger/OpenAPI é gerada automaticamente a partir dos endpoint
 
 ---
 
-## 7. Testes com Postman
+## 8. Testes com Postman
 
 Os testes manuais foram organizados em uma collection Postman exportada no repositório.
 
@@ -326,7 +391,33 @@ http://localhost:8090/swagger-ui/index.html
 
 ---
 
-## 8. Observações de execução
+## 9. Fluxo básico recomendado para teste
+
+Após subir a aplicação em um banco novo, o fluxo recomendado para teste é:
+
+1. Verificar se o Docker/PostgreSQL está rodando;
+2. Iniciar a API;
+3. Acessar o Swagger/OpenAPI;
+4. Fazer login com o administrador inicial:
+
+```json
+{
+  "email": "admin@teste.com",
+  "senha": "123456"
+}
+```
+
+5. Copiar o token JWT retornado;
+6. Usar o token no header `Authorization`;
+7. Testar as rotas protegidas;
+8. Criar pedido usando a unidade, produtos e estoque iniciais;
+9. Aplicar cupom `PROMO10`, se desejado;
+10. Executar pagamento mock;
+11. Atualizar status do pedido.
+
+---
+
+## 10. Observações de execução
 
 Durante o teste em outro computador, foram observados alguns pontos importantes para execução local do projeto:
 
@@ -353,6 +444,6 @@ mvnw.cmd clean install -DskipTests
 
 ---
 
-## 9. Status do projeto
+## 11. Status do projeto
 
-Projeto acadêmico em versão funcional para execução local, documentação com Swagger/OpenAPI e testes manuais via Postman.
+Projeto acadêmico em versão funcional para execução local, documentação com Swagger/OpenAPI, seed automático de dados iniciais e testes manuais via Postman.
