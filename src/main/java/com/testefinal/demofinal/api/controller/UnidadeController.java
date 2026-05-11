@@ -6,6 +6,7 @@ import com.testefinal.demofinal.application.service.EstoqueService;
 import com.testefinal.demofinal.application.service.UnidadeService;
 import com.testefinal.demofinal.domain.model.Unidade;
 import com.testefinal.demofinal.infrastructure.repository.UnidadeRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +30,7 @@ public class UnidadeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Unidade> criarUnidade(@RequestBody UnidadeDTO unidade) {
+    public ResponseEntity<Unidade> criarUnidade(@RequestBody @Valid UnidadeDTO unidade) {
         Unidade unidadeCriada = unidadeService.cadastrarUnidade(unidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(unidadeCriada);
     }
