@@ -156,6 +156,16 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.toDTO(pedidoCancelado));
     }
 
+    @DeleteMapping("/{pedidoId}/itens/{itemId}")
+    @PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN', 'FUNCIONARIO')")
+    public ResponseEntity<PedidoResponseDTO> removerItem(
+            @PathVariable UUID pedidoId,
+            @PathVariable UUID itemId
+    ) {
+        Pedido pedidoAtualizado = pedidoService.removerItem(pedidoId, itemId);
+        return ResponseEntity.ok(pedidoService.toDTO(pedidoAtualizado));
+    }
+
 
 
 }

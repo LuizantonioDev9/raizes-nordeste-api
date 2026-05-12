@@ -243,7 +243,11 @@ public class PedidoService {
             throw new NegocioException("Pedido precisa estar em aberto para remover itens");
         }
 
-        pedido.getItens().removeIf(item -> item.getId().equals(itemId));
+        boolean removido = pedido.getItens().removeIf(item -> item.getId().equals(itemId));
+
+        if (!removido) {
+            throw new NaoEncontradoException("Item do pedido não encontrado");
+        }
 
         recalcular(pedido);
 
@@ -346,6 +350,7 @@ public class PedidoService {
 
         List<ItemResponseDTO> itens = pedido.getItens().stream()
                 .map(item -> new ItemResponseDTO(
+                        item.getId(),
                         item.getProduto().getNome(),
                         item.getQuantidade(),
                         item.getValor()

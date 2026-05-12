@@ -1,17 +1,17 @@
 {
   "info": {
-    "_postman_id": "9b11fa2a-fc2e-4623-a0ec-4a13bc2043b4",
+    "_postman_id": "be88fa75-4581-4ede-a061-0b487faff1bd",
     "name": "Raizes do Nordeste API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "41364046",
-    "_collection_link": "https://go.postman.co/collection/41364046-9b11fa2a-fc2e-4623-a0ec-4a13bc2043b4?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/41364046-be88fa75-4581-4ede-a061-0b487faff1bd?source=collection_link"
   },
   "item": [
     {
       "name": "Auth",
       "item": [
         {
-          "name": "Auth/Login válido CLIENTE",
+          "name": "Login CLIENTE",
           "event": [
             {
               "listen": "test",
@@ -44,7 +44,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"luizteste@email.com\",\r\n  \"senha\": \"Teste@123456\"\r\n}",
+              "raw": "{\r\n  \"email\": \"luizantonio@email.com\",\r\n  \"senha\": \"Teste@123456\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -65,7 +65,7 @@
           "response": []
         },
         {
-          "name": "Auth/Login válido ADMIN",
+          "name": "Login ADMIN",
           "event": [
             {
               "listen": "test",
@@ -91,16 +91,6 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
             "method": "POST",
             "header": [],
             "body": {
@@ -126,7 +116,7 @@
           "response": []
         },
         {
-          "name": "Auth/Login válido FUNCIONARIO",
+          "name": "Login FUNCIONARIO",
           "event": [
             {
               "listen": "test",
@@ -152,16 +142,6 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
             "method": "POST",
             "header": [],
             "body": {
@@ -187,7 +167,7 @@
           "response": []
         },
         {
-          "name": "Auth/Login inválido",
+          "name": "Login inválido",
           "event": [
             {
               "listen": "test",
@@ -213,16 +193,6 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
             "method": "POST",
             "header": [],
             "body": {
@@ -253,13 +223,13 @@
       "name": "Clientes",
       "item": [
         {
-          "name": "Clientes/Cadastrar cliente válido",
+          "name": "Cadastrar cliente válido",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nome\": \"Luiz Teste\",\r\n  \"email\": \"luizteste@email.com\",\r\n  \"telefone\": \"75999999999\",\r\n  \"senha\": \"Teste@123456\",\r\n  \"aceitePoliticaPrivacidade\": true\r\n}",
+              "raw": "{\r\n  \"nome\": \"Teste\",\r\n  \"email\": \"teste@email.com\",\r\n  \"telefone\": \"75999999999\",\r\n  \"senha\": \"Teste@123456\",\r\n  \"aceitePoliticaPrivacidade\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -279,7 +249,7 @@
           "response": []
         },
         {
-          "name": "Clientes/Cadastrar cliente inválido",
+          "name": "Cadastrar cliente inválido",
           "request": {
             "method": "POST",
             "header": [],
@@ -305,7 +275,7 @@
           "response": []
         },
         {
-          "name": "Clientes/Consultar cliente por e-mail Copy",
+          "name": "Consultar cliente por e-mail",
           "request": {
             "auth": {
               "type": "bearer",
@@ -320,7 +290,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/clientes/email?email=luizteste@email.com",
+              "raw": "{{base_url}}/clientes/email?email=luizantonio@email.com",
               "host": [
                 "{{base_url}}"
               ],
@@ -331,7 +301,7 @@
               "query": [
                 {
                   "key": "email",
-                  "value": "luizteste@email.com"
+                  "value": "luizantonio@email.com"
                 }
               ]
             }
@@ -344,7 +314,7 @@
       "name": "Cupons",
       "item": [
         {
-          "name": "Cupons/Cadastrar cupom válido",
+          "name": "Cadastrar cupom válido",
           "request": {
             "auth": {
               "type": "bearer",
@@ -371,7 +341,7 @@
           "response": []
         },
         {
-          "name": "Cupons/Listar cupons",
+          "name": "Listar cupons",
           "request": {
             "auth": {
               "type": "bearer",
@@ -403,7 +373,7 @@
       "name": "Estoque",
       "item": [
         {
-          "name": "Estoque/Cadastrar estoque válido",
+          "name": "Cadastrar estoque válido",
           "request": {
             "auth": {
               "type": "bearer",
@@ -439,7 +409,7 @@
           "response": []
         },
         {
-          "name": "Estoque/Cadastrar quantidade negativa",
+          "name": "Cadastrar quantidade negativa",
           "request": {
             "auth": {
               "type": "bearer",
@@ -475,7 +445,7 @@
           "response": []
         },
         {
-          "name": "Estoque/Cadastrar estoque insuficiente",
+          "name": "Cadastrar estoque insuficiente",
           "request": {
             "auth": {
               "type": "bearer",
@@ -511,48 +481,7 @@
           "response": []
         },
         {
-          "name": "Estoque/Registrar saída de estoque",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/estoques/saida?produtoId=UUID_DO_PRODUTO&unidadeId=UUID_DA_UNIDADE&quantidade=2",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "estoques",
-                "saida"
-              ],
-              "query": [
-                {
-                  "key": "produtoId",
-                  "value": "UUID_DO_PRODUTO"
-                },
-                {
-                  "key": "unidadeId",
-                  "value": "UUID_DA_UNIDADE"
-                },
-                {
-                  "key": "quantidade",
-                  "value": "2"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Estoque/Registrar entrada de estoque",
+          "name": "Registrar saída de estoque",
           "request": {
             "auth": {
               "type": "bearer",
@@ -568,7 +497,58 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"produtoId\": \"5fcf9572-8cd0-4220-a3af-aca59f96d367\",\r\n  \"unidadeId\": \"859b5aca-adca-46e9-b078-597c7efea98f\",\r\n  \"quantidade\": 10\r\n}",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/estoques/saida?produtoId=610d1c4c-5e0f-493d-a5be-41b1f61c9bab&unidadeId=2e0e902d-de07-4682-91a0-621c91169c81&quantidade=50",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estoques",
+                "saida"
+              ],
+              "query": [
+                {
+                  "key": "produtoId",
+                  "value": "610d1c4c-5e0f-493d-a5be-41b1f61c9bab"
+                },
+                {
+                  "key": "unidadeId",
+                  "value": "2e0e902d-de07-4682-91a0-621c91169c81"
+                },
+                {
+                  "key": "quantidade",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar entrada de estoque",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"produtoId\": \"f9ce907b-abab-4c17-b8b6-879f29f177f0\",\r\n  \"unidadeId\": \"2e0e902d-de07-4682-91a0-621c91169c81\",\r\n  \"quantidade\": -10\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -589,12 +569,22 @@
           "response": []
         },
         {
-          "name": "Estoque/Consultar estoque por produto e unidade",
+          "name": "Consultar estoque por produto e unidade",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/estoques?produtoId=UUID_DO_PRODUTO&unidadeId=UUID_DA_UNIDADE",
+              "raw": "{{base_url}}/estoques?produtoId=610d1c4c-5e0f-493d-a5be-41b1f61c9bab&unidadeId=2e0e902d-de07-4682-91a0-621c91169c81",
               "host": [
                 "{{base_url}}"
               ],
@@ -604,11 +594,11 @@
               "query": [
                 {
                   "key": "produtoId",
-                  "value": "UUID_DO_PRODUTO"
+                  "value": "610d1c4c-5e0f-493d-a5be-41b1f61c9bab"
                 },
                 {
                   "key": "unidadeId",
-                  "value": "UUID_DA_UNIDADE"
+                  "value": "2e0e902d-de07-4682-91a0-621c91169c81"
                 }
               ]
             }
@@ -621,7 +611,7 @@
       "name": "Fidelidade",
       "item": [
         {
-          "name": "aderirFidelidade",
+          "name": "Aderir fidelidade",
           "request": {
             "auth": {
               "type": "bearer",
@@ -636,21 +626,21 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/fidelidade/aderir/94c8169c-e38c-4e3c-986d-82c1d50d2b50",
+              "raw": "{{base_url}}/fidelidade/aderir/{{pedido_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "fidelidade",
                 "aderir",
-                "94c8169c-e38c-4e3c-986d-82c1d50d2b50"
+                "{{pedido_id}}"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "visualizarMeusPontos Copy",
+          "name": "Visualizar pontos de fidelidade",
           "request": {
             "auth": {
               "type": "bearer",
@@ -683,7 +673,7 @@
       "name": "Funcionario",
       "item": [
         {
-          "name": "Funcionários/Cadastrar funcionário válido",
+          "name": "Cadastrar funcionário válido",
           "request": {
             "auth": {
               "type": "bearer",
@@ -719,7 +709,7 @@
           "response": []
         },
         {
-          "name": "Funcionários/Cadastrar funcionário inválido",
+          "name": "Cadastrar funcionário inválido",
           "request": {
             "auth": {
               "type": "bearer",
@@ -760,7 +750,7 @@
       "name": "Pagamentos",
       "item": [
         {
-          "name": "Pagamentos/Mock aprovado",
+          "name": "Pagamento mock aprovado",
           "request": {
             "auth": {
               "type": "bearer",
@@ -776,7 +766,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"pedidoId\": \"543fba9f-edde-4e22-a127-f7e1989d6977\",\r\n    \"sucesso\": true\r\n}",
+              "raw": "{\r\n    \"pedidoId\": \"34f3d18d-00d9-41b1-9630-5fa7cd850a97\",\r\n    \"sucesso\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -797,7 +787,7 @@
           "response": []
         },
         {
-          "name": "Pagamentos/Mock recusado",
+          "name": "Pagamento mock recusado",
           "request": {
             "auth": {
               "type": "bearer",
@@ -842,7 +832,7 @@
           "name": "Criação",
           "item": [
             {
-              "name": "Pedidos/Criação/Criar pedido válido",
+              "name": "Criar pedido válido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -878,7 +868,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Criação/Criar pedido sem canalPedido",
+              "name": "Criar pedido sem canalPedido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -914,7 +904,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Criação/Criar pedido com unidade inexistente",
+              "name": "Criar pedido com unidade inexistente",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -950,7 +940,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Criação/Criar pedido com estoque insuficiente Copy",
+              "name": "Criar pedido com estoque insuficiente",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -966,7 +956,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"unidadeId\": \"2e0e902d-de07-4682-91a0-621c91169c81\",\r\n  \"canalPedido\": \"APP\",\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": \"610d1c4c-5e0f-493d-a5be-41b1f61c9bab\",\r\n      \"quantidade\":12\r\n    }\r\n  ],\r\n  \"pontosResgate\": 0\r\n}",
+                  "raw": "{\r\n  \"unidadeId\": \"2e0e902d-de07-4682-91a0-621c91169c81\",\r\n  \"canalPedido\": \"APP\",\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": \"610d1c4c-5e0f-493d-a5be-41b1f61c9bab\",\r\n      \"quantidade\":200\r\n    }\r\n  ],\r\n  \"pontosResgate\": 0\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -991,7 +981,7 @@
           "name": "Itens",
           "item": [
             {
-              "name": "Pedidos/Itens/Adicionar item ao pedido",
+              "name": "Adicionar item ao pedido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1029,7 +1019,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Itens/Adicionar item com produto inexistente",
+              "name": "Adicionar item com produto inexistente",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1067,7 +1057,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Itens/Adicionar item com quantidade inválida",
+              "name": "Adicionar item com quantidade inválida",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1105,7 +1095,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Itens/Adicionar item com estoque insuficiente",
+              "name": "Adicionar item com estoque insuficiente",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1137,6 +1127,45 @@
                     "pedidos",
                     "{{pedido_id}}",
                     "itens"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Remover item do pedido",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"produtoId\": \"f9ce907b-abab-4c17-b8b6-879f29f177f0\",\r\n  \"quantidade\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/itens/{{item_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "itens",
+                    "{{item_id}}"
                   ]
                 }
               },
@@ -1148,7 +1177,7 @@
           "name": "Consulta",
           "item": [
             {
-              "name": "Pedidos/Consulta/Listar pedidos por canal",
+              "name": "Listar pedidos por canal",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1181,30 +1210,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Consulta/Listar pedidos por canal sem permissão",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/pedidos?canalPedido=BALCAO",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "pedidos"
-                  ],
-                  "query": [
-                    {
-                      "key": "canalPedido",
-                      "value": "BALCAO"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Pedidos/Consulta/Consultar meu carrinho",
+              "name": "Consultar meu carrinho",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1232,7 +1238,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Consulta/Consultar status",
+              "name": "Consultar status",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1261,7 +1267,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Consulta/Consultar pedidos por id",
+              "name": "Consultar pedidos por id",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1276,13 +1282,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/pedidos/e9045588-d265-4659-a715-ab4279f5a075",
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "pedidos",
-                    "e9045588-d265-4659-a715-ab4279f5a075"
+                    "{{pedido_id}}"
                   ]
                 }
               },
@@ -1294,7 +1300,7 @@
           "name": "Cupom",
           "item": [
             {
-              "name": "Pedidos/Cupom/Aplicar cupom ao pedido",
+              "name": "Aplicar cupom ao pedido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1332,7 +1338,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Cupom/Aplicar segundo cupom no pedido",
+              "name": "Aplicar segundo cupom no pedido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1370,7 +1376,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Cupom/Aplicar cupom inexistente",
+              "name": "Aplicar cupom inexistente",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1413,7 +1419,7 @@
           "name": "Status",
           "item": [
             {
-              "name": "Pedidos/Status/Atualizar para EM_PREPARO",
+              "name": "Atualizar para EM_PREPARO",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1442,36 +1448,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Status/Atualizar status sem permissão",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "PUT",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/preparar",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "pedidos",
-                    "{{pedido_id}}",
-                    "preparar"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Pedidos/Status/Atualizar para PRONTO",
+              "name": "Atualizar para PRONTO",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1500,7 +1477,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Status/Finalizar pedido",
+              "name": "Finalizar pedido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1529,7 +1506,7 @@
               "response": []
             },
             {
-              "name": "Pedidos/Status/Cancelar pedido",
+              "name": "Cancelar pedido",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1556,6 +1533,35 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "Atualizar status sem permissão",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pedidos/{{pedido_id}}/preparar",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pedidos",
+                    "{{pedido_id}}",
+                    "preparar"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         }
@@ -1565,7 +1571,7 @@
       "name": "Produtos",
       "item": [
         {
-          "name": "Produtos/Cadastrar produto válido",
+          "name": "Cadastrar produto válido",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1581,7 +1587,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nome\": \"Pacote de Pé de moleque\",\r\n  \"descricao\": \"10 pé de moleque\",\r\n  \"preco\": 16.99\r\n}",
+              "raw": "{\r\n  \"nome\": \"Canjica Nordestina\",\r\n  \"descricao\": \"Creme de milho verde cozido com leite, coco e canela.\",\r\n  \"preco\": 12.90\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1601,43 +1607,7 @@
           "response": []
         },
         {
-          "name": "Produtos/Cadastrar produto sem permissão",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"nome\": \"Sorvete de paçoca\",\r\n  \"descricao\": \"sorvete feito com a paçoquita\",\r\n  \"preco\": 10.99\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/produtos",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "produtos"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Produtos/Cadastrar produto sem token",
+          "name": "Cadastrar produto sem token",
           "request": {
             "auth": {
               "type": "noauth"
@@ -1646,7 +1616,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nome\": \"Pacote de Pé de moleque\",\r\n  \"descricao\": \"10 pé de moleque\",\r\n  \"preco\": 16.99\r\n}",
+              "raw": "{\r\n  \"nome\": \"Pacote de Pé de moleque\",\r\n  \"descricao\": \"Contem 10 pés de moloque caseiros\",\r\n  \"preco\": 9.99\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1666,7 +1636,7 @@
           "response": []
         },
         {
-          "name": "Produtos/Cadastrar preço inválido",
+          "name": "Cadastrar preço inválido",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1702,10 +1672,29 @@
           "response": []
         },
         {
-          "name": "Produtos/Listar produtos",
+          "name": "Listar produtos",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
           },
           "response": []
         }
@@ -1715,7 +1704,7 @@
       "name": "Unidades",
       "item": [
         {
-          "name": "Unidades/Cadastrar unidade válida",
+          "name": "Cadastrar unidade válida",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1751,7 +1740,7 @@
           "response": []
         },
         {
-          "name": "Unidades/Cadastrar unidade inexistente",
+          "name": "Cadastrar unidade inexistente",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1767,7 +1756,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nome\": \"Unidade Cidade Nova\",\r\n  \"cidade\": \"Estância\",\r\n}",
+              "raw": "{\r\n  \"nome\": \"Unidade Cidades Novas\",\r\n  \"cidade\": \"Estância\",\r\n  \"endereco\": \"\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1787,7 +1776,7 @@
           "response": []
         },
         {
-          "name": "Unidades/Consultar cardápio da unidade",
+          "name": "Consultar cardápio da unidade",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -1822,6 +1811,45 @@
                 "unidades",
                 "unidadeId",
                 "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar unidades",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/unidades",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "unidades"
               ]
             }
           },
