@@ -449,6 +449,7 @@ wsl --update
 - Caso o Maven apresente erro de conexão, como `Connection reset`, verifique a internet, proxy do IntelliJ ou recarregue o projeto Maven.
 - Se o comando `mvn clean install` falhar ao apagar a pasta `target`, pare processos em execução, feche janelas que estejam usando a pasta do projeto e remova a pasta `target` manualmente.
 - O comando `mvn clean install` executa os testes automáticos. Como o teste padrão sobe o contexto da aplicação, ele pode falhar se o PostgreSQL não estiver rodando.
+- Recomenda-se evitar rodar o projeto dentro de pastas sincronizadas pelo OneDrive, pois isso pode travar arquivos da pasta target.
 - Para apenas compilar e instalar as dependências, use:
 
 ```bash
@@ -457,6 +458,7 @@ mvnw.cmd clean install -DskipTests
 
 - Caso apareça o erro `Connection to localhost:5433 refused`, significa que o container PostgreSQL não está rodando ou a porta `5433` não está disponível.
 - Caso apareça erro de senha do banco, confira as variáveis de ambiente `DB_USERNAME` e `DB_PASSWORD`.
+- Caso o IntelliJ não reconheça as dependências do Spring, recarregue o Maven ou execute mvnw.cmd clean install -DskipTests -U.
 - O arquivo `.env` pode não ser lido automaticamente pelo IntelliJ. Se isso ocorrer, configure as variáveis em `Run/Debug Configurations > Environment variables`.
 
 ---
