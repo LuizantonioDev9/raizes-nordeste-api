@@ -100,19 +100,26 @@ JWT_EXPIRATION=86400000
 SERVER_PORT=8090
 ```
 
-O arquivo `.env` não deve ser enviado ao GitHub, pois pode conter dados sensíveis. O arquivo `.env.example` pode ser versionado no repositório como modelo de configuração.
-
 Observação: em alguns ambientes, o Spring Boot/IntelliJ pode não ler automaticamente o arquivo `.env`. Nesse caso, configure as variáveis em:
 
+Caminho no IntelliJ:
+
 ```text
-Run/Debug Configurations > DemofinalApplication > Environment variables
+Run > Edit Configurations... > Spring Boot > DemofinalApplication
 ```
 
-Exemplo para colar no campo de variáveis de ambiente do IntelliJ:
+Caso o campo `Environment variables` não esteja visível, clique em:
+
+```text
+Modify options > Environment variables
+```
+
+Depois cole as variáveis no campo `Environment variables`:
 
 ```env
 DB_URL=jdbc:postgresql://localhost:5433/meubanco;DB_USERNAME=admin;DB_PASSWORD=123456;DB_DRIVER=org.postgresql.Driver;JPA_DDL_AUTO=update;JPA_SHOW_SQL=true;FLYWAY_ENABLED=false;FLYWAY_LOCATIONS=classpath:db/migration;JWT_SECRET=Ksj@82kLmPq9Xz!2Hd8QwErT6YuIop3A;JWT_EXPIRATION=86400000;SERVER_PORT=8090
 ```
+
 
 ---
 
